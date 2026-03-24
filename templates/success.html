@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - Voxlead</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .success-container {
+      text-align: center;
+      padding: 3rem;
+      max-width: 500px;
+    }
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #6c63ff, #a85cff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      font-size: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #6c63ff, #a85cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p { color: #aaa; line-height: 1.6; margin-bottom: 2rem; }
+    .btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #6c63ff, #a85cff);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="success-container">
+    <div class="checkmark">✓</div>
+    <h1>You're In!</h1>
+    <p>
+      Thank you for joining Voxlead. Your request has been received and our team will reach out within 24 hours to get your campaign set up.
+    </p>
+    {% if session_id %}
+    <p style="color:#666;font-size:0.8rem">Order ID: {{ session_id }}</p>
+    {% endif %}
+    <a href="/" class="btn">Back to Home</a>
+  </div>
+</body>
+</html>
