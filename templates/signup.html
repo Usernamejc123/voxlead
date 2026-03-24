@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voxlead — Start Your Campaign</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        extend: {
+          colors: {
+            navy:  { 50:'#f0f4ff', 100:'#dbe4ff', 200:'#bac8ff', 600:'#4c6ef5', 700:'#4263eb', 800:'#3b5bdb', 900:'#364fc7', 950:'#1e3a8a' },
+            slate: { 50:'#f8fafc', 100:'#f1f5f9', 200:'#e2e8f0', 300:'#cbd5e1', 400:'#94a3b8', 500:'#64748b', 600:'#475569', 700:'#334155', 800:'#1e293b', 900:'#0f172a' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
+
+  <!-- Nav -->
+  <nav class="bg-white border-b border-slate-100">
+    <div class="max-w-4xl mx-auto px-6 h-16 flex items-center gap-3">
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-navy-700 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-sm">V</span>
+        </div>
+        <span class="text-lg font-bold text-slate-900 tracking-tight">Voxlead</span>
+      </a>
+      <span class="text-slate-300 ml-2">/</span>
+      <span class="text-sm text-slate-400 font-medium">Start Campaign</span>
+    </div>
+  </nav>
+
+  <div class="max-w-xl mx-auto px-6 py-12">
+
+    {% if cancelled %}
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex items-start gap-3">
+      <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+      <div>
+        <p class="text-sm font-medium text-amber-800">Payment was cancelled</p>
+        <p class="text-sm text-amber-600 mt-0.5">No charge was made. You can try again below.</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-extrabold text-slate-900 mb-2">Start your campaign</h1>
+      <p class="text-slate-500">Tell us about your business and we'll handle the rest. Takes under 2 minutes.</p>
+    </div>
+
+    <!-- Plan selector -->
+    <div class="mb-8">
+      <label class="block text-sm font-semibold text-slate-700 mb-3">Select your plan</label>
+      <div class="grid grid-cols-3 gap-3" id="plan-selector">
+        <button type="button" data-plan="starter" class="plan-btn group border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200 bg-white">
+          <div class="text-xs font-semibold text-slate-400 group-hover:text-navy-500 uppercase tracking-wide">Starter</div>
+          <div class="text-2xl font-extrabold text-slate-900 mt-1">$497</div>
+          <div class="text-xs text-slate-400 mt-1">500 leads</div>
+        </button>
+        <button type="button" data-plan="growth" class="plan-btn group border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200 bg-white relative">
+          <div class="absolute -top-2.5 left-1/2 -translate-x-1/2">
+            <span class="bg-navy-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Popular</span>
+          </div>
+          <div class="text-xs font-semibold text-slate-400 group-hover:text-navy-500 uppercase tracking-wide">Growth</div>
+          <div class="text-2xl font-extrabold text-slate-900 mt-1">$997</div>
+          <div class="text-xs text-slate-400 mt-1">2,000 leads</div>
+        </button>
+        <button type="button" data-plan="scale" class="plan-btn group border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200 bg-white">
+          <div class="text-xs font-semibold text-slate-400 group-hover:text-navy-500 uppercase tracking-wide">Scale</div>
+          <div class="text-2xl font-extrabold text-slate-900 mt-1">$1,997</div>
+          <div class="text-xs text-slate-400 mt-1">5,000 leads</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-slate-200 mb-8"></div>
+
+    <!-- Form -->
+    <form id="signup-form" class="space-y-5">
+      <input type="hidden" name="plan" id="plan-input" value="{{ selected_plan }}">
+
+      <div class="grid md:grid-cols-2 gap-5">
+        <div>
+          <label for="company_name" class="block text-sm font-semibold text-slate-700 mb-1.5">Business name</label>
+          <input type="text" id="company_name" name="company_name" required
+            class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
+            placeholder="Acme Corp">
+        </div>
+        <div>
+          <label for="contact_name" class="block text-sm font-semibold text-slate-700 mb-1.5">Your name</label>
+          <input type="text" id="contact_name" name="contact_name" required
+            class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
+            placeholder="Jane Smith">
+        </div>
+      </div>
+
+      <div>
+        <label for="contact_email" class="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
+        <input type="email" id="contact_email" name="contact_email" required
+          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
+          placeholder="jane@acmecorp.com">
+      </div>
+
+      <div>
+        <label for="what_they_sell" class="block text-sm font-semibold text-slate-700 mb-1.5">What does your business sell?</label>
+        <textarea id="what_they_sell" name="what_they_sell" rows="3" required
+          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition resize-none text-sm"
+          placeholder="We sell SaaS marketing automation tools to mid-market B2B companies..."></textarea>
+      </div>
+
+      <div>
+        <label for="target_location" class="block text-sm font-semibold text-slate-700 mb-1.5">Target industry &amp; location</label>
+        <input type="text" id="target_location" name="target_location" required
+          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
+          placeholder="SaaS companies, 50-500 employees, United States">
+      </div>
+
+      <button type="submit" id="submit-btn"
+        class="w-full bg-navy-700 hover:bg-navy-800 text-white font-semibold py-3.5 rounded-xl text-base transition shadow-md shadow-navy-700/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2">
+        Continue to Payment
+      </button>
+
+      <!-- Trust signals -->
+      <div class="flex items-center justify-center gap-6 pt-2">
+        <div class="flex items-center gap-1.5 text-xs text-slate-400">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+          Secured by Stripe
+        </div>
+        <div class="flex items-center gap-1.5 text-xs text-slate-400">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+          SSL encrypted
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const planBtns = document.querySelectorAll('.plan-btn');
+    const planInput = document.getElementById('plan-input');
+
+    function selectPlan(plan) {
+      planInput.value = plan;
+      planBtns.forEach(btn => {
+        if (btn.dataset.plan === plan) {
+          btn.classList.add('border-navy-600', 'bg-navy-50', 'shadow-sm');
+          btn.classList.remove('border-slate-200', 'bg-white');
+        } else {
+          btn.classList.remove('border-navy-600', 'bg-navy-50', 'shadow-sm');
+          btn.classList.add('border-slate-200', 'bg-white');
+        }
+      });
+    }
+
+    planBtns.forEach(btn => btn.addEventListener('click', () => selectPlan(btn.dataset.plan)));
+    selectPlan('{{ selected_plan }}' || 'starter');
+
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Redirecting to Stripe...';
+      try {
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        const resp = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const result = await resp.json();
+        if (result.url) {
+          window.location.href = result.url;
+        } else {
+          throw new Error(result.error || 'Failed to create checkout session');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Continue to Payment';
+        alert('Something went wrong: ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
