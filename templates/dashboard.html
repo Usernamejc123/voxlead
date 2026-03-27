@@ -1,375 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voxlead — Operator Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-        extend: {
-          colors: {
-            navy:  { 50:'#f0f4ff', 100:'#dbe4ff', 200:'#bac8ff', 600:'#4c6ef5', 700:'#4263eb', 800:'#3b5bdb', 900:'#364fc7', 950:'#1e3a8a' },
-            slate: { 50:'#f8fafc', 100:'#f1f5f9', 200:'#e2e8f0', 300:'#cbd5e1', 400:'#94a3b8', 500:'#64748b', 600:'#475569', 700:'#334155', 800:'#1e293b', 900:'#0f172a' }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
-    .live-dot { animation: pulse-dot 2s ease-in-out infinite; }
-    .stat-card { transition: box-shadow 0.15s; }
-    .stat-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Voxlead — Operator Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 text-slate-900 antialiased min-h-screen">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans">
 
-  <!-- ─── Sidebar + Main Layout ───────────────────────────────────────── -->
-  <div class="flex min-h-screen">
-
-    <!-- Sidebar -->
-    <aside class="w-60 bg-white border-r border-slate-200 flex flex-col hidden lg:flex">
-      <div class="px-5 h-16 flex items-center border-b border-slate-100">
-        <a href="/dashboard" class="flex items-center gap-2">
-          <div class="w-7 h-7 bg-navy-700 rounded-md flex items-center justify-center">
-            <span class="text-white font-bold text-xs">V</span>
-          </div>
-          <span class="text-base font-bold text-slate-900 tracking-tight">Voxlead</span>
-        </a>
-      </div>
-      <nav class="flex-1 px-3 py-4">
-        <a href="/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-navy-50 text-navy-700 font-medium text-sm mb-1">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
-          Overview
-        </a>
-      </nav>
-      <div class="px-3 py-4 border-t border-slate-100">
-        <div class="flex items-center gap-2 px-3 text-xs text-slate-400">
-          <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full live-dot"></span>
-          Auto-refreshing
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main -->
-    <main class="flex-1 min-w-0">
-
-      <!-- Top bar -->
-      <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div class="px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="lg:hidden flex items-center gap-2">
-              <div class="w-7 h-7 bg-navy-700 rounded-md flex items-center justify-center">
-                <span class="text-white font-bold text-xs">V</span>
-              </div>
-              <span class="text-base font-bold text-slate-900">Voxlead</span>
-            </div>
-            <h1 class="text-base font-bold text-slate-900 hidden lg:block">Campaign Overview</h1>
-            <span class="text-xs bg-slate-100 text-slate-500 font-medium rounded-md px-2 py-1 hidden lg:inline">Operator</span>
-          </div>
-          <button onclick="loadDashboard()" class="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 border border-slate-200 rounded-lg px-3.5 py-2 transition hover:bg-slate-50 font-medium">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M8.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"/></svg>
-            Refresh
-          </button>
-        </div>
-      </header>
-
-      <div class="px-6 lg:px-8 py-6">
-
-        <!-- Loading -->
-        <div id="loading" class="flex items-center justify-center py-32">
-          <div class="text-center">
-            <svg class="w-8 h-8 text-slate-300 animate-spin mx-auto mb-3" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            <p class="text-sm text-slate-400">Loading dashboard...</p>
-          </div>
-        </div>
-
-        <!-- Dashboard (hidden until loaded) -->
-        <div id="dashboard-content" class="hidden">
-
-          <!-- Stats -->
-          <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
-            <div class="stat-card bg-white border border-slate-200 rounded-xl p-5">
-              <div class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">Clients</div>
-              <div class="text-2xl font-extrabold text-slate-900" id="stat-clients">0</div>
-            </div>
-            <div class="stat-card bg-white border border-slate-200 rounded-xl p-5">
-              <div class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">Leads</div>
-              <div class="text-2xl font-extrabold text-slate-900" id="stat-leads">0</div>
-            </div>
-            <div class="stat-card bg-white border border-slate-200 rounded-xl p-5">
-              <div class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">Sent</div>
-              <div class="text-2xl font-extrabold text-slate-900" id="stat-emails">0</div>
-            </div>
-            <div class="stat-card bg-white border border-slate-200 rounded-xl p-5">
-              <div class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">Replies</div>
-              <div class="text-2xl font-extrabold text-slate-900" id="stat-replies">0</div>
-            </div>
-            <div class="stat-card bg-white border border-slate-200 rounded-xl p-5">
-              <div class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">Reply Rate</div>
-              <div class="text-2xl font-extrabold text-navy-700" id="stat-reply-rate">0%</div>
-            </div>
-            <div class="stat-card bg-white border border-slate-200 rounded-xl p-5">
-              <div class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">Cost/Lead</div>
-              <div class="text-2xl font-extrabold text-slate-900" id="stat-cpl">$0</div>
-            </div>
-            <div class="stat-card bg-white border border-slate-200 rounded-xl p-5">
-              <div class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">Revenue</div>
-              <div class="text-2xl font-extrabold text-emerald-600" id="stat-revenue">$0</div>
-            </div>
-          </div>
-
-          <!-- Pipeline -->
-          <div class="mb-6">
-            <div class="flex items-center gap-2 mb-3">
-              <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide">Lead Pipeline</h3>
-            </div>
-            <div class="flex flex-wrap gap-2" id="pipeline-badges"></div>
-          </div>
-
-          <!-- Client Table -->
-          <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-              <h2 class="text-sm font-bold text-slate-800">Client Campaigns</h2>
-              <select id="status-filter" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium px-3 py-2 text-slate-600 focus:outline-none focus:ring-2 focus:ring-navy-100 cursor-pointer">
-                <option value="">All statuses</option>
-                <option value="paid">Paid</option>
-                <option value="running">Running</option>
-                <option value="completed">Completed</option>
-                <option value="failed">Failed</option>
-              </select>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full text-sm">
-                <thead>
-                  <tr class="text-left text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 bg-slate-50/50">
-                    <th class="px-6 py-3">Company</th>
-                    <th class="px-6 py-3">Contact</th>
-                    <th class="px-6 py-3">Package</th>
-                    <th class="px-6 py-3">Status</th>
-                    <th class="px-6 py-3 text-right">Leads</th>
-                    <th class="px-6 py-3 text-right">Sent</th>
-                    <th class="px-6 py-3 text-right">Replies</th>
-                    <th class="px-6 py-3 text-right">Cost</th>
-                    <th class="px-6 py-3 text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody id="clients-table" class="divide-y divide-slate-100"></tbody>
-              </table>
-            </div>
-            <div id="empty-state" class="hidden text-center py-16">
-              <svg class="w-10 h-10 text-slate-200 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z"/></svg>
-              <p class="text-sm text-slate-400 font-medium">No clients yet</p>
-              <p class="text-xs text-slate-300 mt-1">They'll appear here after payment.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+<!-- Header -->
+<div class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-sm">V</div>
+    <span class="font-semibold text-lg tracking-tight">Voxlead</span>
+    <span class="text-gray-500 text-sm">/ Operator</span>
   </div>
+  <button onclick="openNewCampaign()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition">+ New Campaign</button>
+</div>
 
-  <!-- Approve Modal -->
-  <div id="approve-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center">
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 bg-navy-50 rounded-xl flex items-center justify-center">
-          <svg class="w-5 h-5 text-navy-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/></svg>
-        </div>
-        <div>
-          <h3 class="text-base font-bold text-slate-900">Approve Campaign</h3>
-          <p class="text-xs text-slate-400">This triggers the full automation pipeline</p>
-        </div>
+<div class="max-w-6xl mx-auto px-6 py-8 space-y-8">
+
+  <!-- Upload Leads Panel -->
+  <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
+    <h2 class="text-base font-semibold mb-4">Upload Leads to Campaign</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="md:col-span-1">
+        <label class="block text-xs text-gray-400 mb-1">Select Campaign</label>
+        <select id="uploadCampaignId" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+          <option value="">Loading campaigns…</option>
+        </select>
       </div>
-
-      <div class="bg-slate-50 rounded-xl p-4 mb-5 border border-slate-100">
-        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Pipeline steps</p>
-        <ol class="text-sm text-slate-600 space-y-2">
-          <li class="flex items-start gap-2">
-            <span class="w-5 h-5 bg-navy-700 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">1</span></span>
-            Apollo searches for prospects matching ICP
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="w-5 h-5 bg-navy-700 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">2</span></span>
-            NeverBounce validates each email address
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="w-5 h-5 bg-navy-700 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">3</span></span>
-            AI generates personalized icebreakers
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="w-5 h-5 bg-navy-700 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">4</span></span>
-            Leads push to Instantly for outreach
-          </li>
-        </ol>
+      <div class="md:col-span-2">
+        <label class="block text-xs text-gray-400 mb-1">CSV File <span class="text-gray-600">(columns: email, first_name, last_name, company, title, industry)</span></label>
+        <input type="file" id="csvFile" accept=".csv" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 file:mr-3 file:bg-indigo-600 file:border-0 file:text-white file:text-xs file:px-3 file:py-1 file:rounded file:cursor-pointer"/>
       </div>
-
-      <p class="text-sm text-slate-700 mb-5">Company: <span id="modal-company" class="font-bold text-navy-700"></span></p>
-
-      <div class="flex gap-3">
-        <button onclick="closeModal()" class="flex-1 border border-slate-200 rounded-xl py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition">Cancel</button>
-        <button id="modal-confirm-btn" onclick="confirmApprove()" class="flex-1 bg-navy-700 hover:bg-navy-800 text-white rounded-xl py-2.5 text-sm font-semibold transition shadow-md shadow-navy-700/20">
-          Approve &amp; Start
-        </button>
-      </div>
+    </div>
+    <div class="mt-4 flex items-center gap-3">
+      <button onclick="uploadLeads()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-5 py-2 rounded-lg transition">Generate Icebreakers &amp; Upload</button>
+      <span id="uploadStatus" class="text-sm text-gray-400"></span>
     </div>
   </div>
 
-  <script>
-    let dashboardData = null;
-    let pendingApproveId = null;
+  <!-- Campaigns Table -->
+  <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+      <h2 class="text-base font-semibold">Campaigns</h2>
+      <button onclick="loadCampaigns()" class="text-xs text-gray-500 hover:text-gray-300 transition">↻ Refresh</button>
+    </div>
+    <div id="campaignsContainer" class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-xs text-gray-500 uppercase tracking-wider bg-gray-800/50">
+          <tr>
+            <th class="text-left px-6 py-3">Campaign</th>
+            <th class="text-left px-6 py-3">Status</th>
+            <th class="text-left px-6 py-3">Created</th>
+            <th class="text-left px-6 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="campaignsBody">
+          <tr><td colspan="4" class="px-6 py-8 text-center text-gray-500">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    async function loadDashboard() {
-      try {
-        const resp = await fetch('/api/dashboard/stats');
-        if (resp.status === 401) { window.location.reload(); return; }
-        dashboardData = await resp.json();
-        renderDashboard(dashboardData);
-      } catch (err) {
-        document.getElementById('loading').innerHTML =
-          '<div class="text-center"><p class="text-sm text-red-500 font-medium">Failed to load: ' + err.message + '</p></div>';
-      }
+</div>
+
+<!-- New Campaign Modal -->
+<div id="newCampaignModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+  <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md mx-4">
+    <h3 class="font-semibold text-base mb-4">Create New Campaign</h3>
+    <label class="block text-xs text-gray-400 mb-1">Campaign Name (e.g. "Smith Plumbing — March")</label>
+    <input id="newCampaignName" type="text" placeholder="Client Name — Month" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none focus:border-indigo-500"/>
+    <div class="flex gap-3">
+      <button onclick="createCampaign()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium py-2 rounded-lg transition">Create</button>
+      <button onclick="closeNewCampaign()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-sm py-2 rounded-lg transition">Cancel</button>
+    </div>
+    <p id="createStatus" class="text-xs text-gray-400 mt-3 hidden"></p>
+  </div>
+</div>
+
+<script>
+const STATUS_MAP = {0:'Draft',1:'Active',2:'Paused',3:'Completed',4:'Error'};
+const STATUS_COLOR = {0:'text-yellow-400',1:'text-green-400',2:'text-orange-400',3:'text-blue-400',4:'text-red-400'};
+
+async function api(method, path, body) {
+  const opts = {method, headers:{'Content-Type':'application/json'}};
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(path, opts);
+  return r.json();
+}
+
+async function loadCampaigns() {
+  const tbody = document.getElementById('campaignsBody');
+  tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500">Loading…</td></tr>';
+  try {
+    const data = await api('GET', '/api/campaigns');
+    const items = data.items || [];
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500">No campaigns yet. Create one above.</td></tr>';
+      return;
     }
+    tbody.innerHTML = items.map(c => {
+      const status = STATUS_MAP[c.status] || 'Unknown';
+      const color = STATUS_COLOR[c.status] || 'text-gray-400';
+      const date = c.timestamp_created ? new Date(c.timestamp_created).toLocaleDateString() : '—';
+      const isActive = c.status === 1;
+      const isDraft = c.status === 0;
+      return `<tr class="border-t border-gray-800 hover:bg-gray-800/30 transition">
+        <td class="px-6 py-4 font-medium">${esc(c.name)}</td>
+        <td class="px-6 py-4"><span class="${color} font-medium">${status}</span></td>
+        <td class="px-6 py-4 text-gray-400">${date}</td>
+        <td class="px-6 py-4 flex items-center gap-2">
+          ${isDraft ? `<button onclick="launchCampaign('${c.id}')" class="bg-green-600 hover:bg-green-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition">▶ Launch</button>` : ''}
+          ${isActive ? `<button onclick="pauseCampaign('${c.id}')" class="bg-orange-600 hover:bg-orange-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition">⏸ Pause</button>` : ''}
+          <button onclick="copyId('${c.id}')" class="text-gray-500 hover:text-gray-300 text-xs px-2 py-1.5 rounded transition" title="Copy ID">ID</button>
+        </td>
+      </tr>`;
+    }).join('');
+    // Populate the campaign selector for uploads
+    const sel = document.getElementById('uploadCampaignId');
+    sel.innerHTML = items.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-red-400">Error: ${e.message}</td></tr>`;
+  }
+}
 
-    function renderDashboard(data) {
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('dashboard-content').classList.remove('hidden');
+async function launchCampaign(id) {
+  if (!confirm('Launch this campaign? Emails will start sending.')) return;
+  const r = await api('POST', `/api/campaigns/${id}/launch`);
+  if (r._error) { alert('Error: ' + JSON.stringify(r.detail)); return; }
+  await loadCampaigns();
+}
 
-      document.getElementById('stat-clients').textContent = data.total_clients;
-      document.getElementById('stat-leads').textContent = data.total_leads_researched.toLocaleString();
-      document.getElementById('stat-emails').textContent = data.total_emails_sent.toLocaleString();
-      document.getElementById('stat-replies').textContent = data.total_replies.toLocaleString();
-      document.getElementById('stat-reply-rate').textContent = data.reply_rate + '%';
-      document.getElementById('stat-cpl').textContent = '$' + data.cost_per_lead.toFixed(3);
-      document.getElementById('stat-revenue').textContent = '$' + data.total_revenue.toLocaleString();
+async function pauseCampaign(id) {
+  const r = await api('POST', `/api/campaigns/${id}/pause`);
+  if (r._error) { alert('Error: ' + JSON.stringify(r.detail)); return; }
+  await loadCampaigns();
+}
 
-      const pipelineEl = document.getElementById('pipeline-badges');
-      pipelineEl.innerHTML = '';
-      const statusStyles = {
-        new: 'bg-blue-50 text-blue-700 border-blue-200',
-        validating: 'bg-amber-50 text-amber-700 border-amber-200',
-        validated: 'bg-cyan-50 text-cyan-700 border-cyan-200',
-        enriching: 'bg-purple-50 text-purple-700 border-purple-200',
-        enriched: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-        ready: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-        pushed: 'bg-green-50 text-green-700 border-green-200',
-        failed: 'bg-red-50 text-red-700 border-red-200',
-      };
-      for (const [status, count] of Object.entries(data.lead_pipeline || {})) {
-        const style = statusStyles[status] || 'bg-slate-50 text-slate-600 border-slate-200';
-        pipelineEl.innerHTML += `<span class="text-xs font-semibold border rounded-lg px-3 py-1.5 ${style}">${status} <span class="font-bold">${count}</span></span>`;
-      }
+function openNewCampaign() {
+  document.getElementById('newCampaignModal').classList.remove('hidden');
+  document.getElementById('newCampaignName').focus();
+}
+function closeNewCampaign() {
+  document.getElementById('newCampaignModal').classList.add('hidden');
+  document.getElementById('createStatus').classList.add('hidden');
+}
 
-      renderClients(data.clients);
+async function createCampaign() {
+  const name = document.getElementById('newCampaignName').value.trim();
+  if (!name) return;
+  const statusEl = document.getElementById('createStatus');
+  statusEl.textContent = 'Creating…';
+  statusEl.classList.remove('hidden');
+  const r = await api('POST', '/api/campaigns', {name});
+  if (r._error) {
+    statusEl.textContent = 'Error: ' + JSON.stringify(r.detail);
+    return;
+  }
+  closeNewCampaign();
+  document.getElementById('newCampaignName').value = '';
+  await loadCampaigns();
+}
+
+async function uploadLeads() {
+  const campaignId = document.getElementById('uploadCampaignId').value;
+  const file = document.getElementById('csvFile').files[0];
+  const status = document.getElementById('uploadStatus');
+  if (!campaignId) { status.textContent = '⚠ Select a campaign first'; return; }
+  if (!file) { status.textContent = '⚠ Select a CSV file first'; return; }
+
+  status.textContent = 'Reading CSV…';
+  const csv = await file.text();
+
+  status.textContent = 'Generating icebreakers & uploading to Instantly…';
+  try {
+    const r = await api('POST', '/api/upload-leads', {campaign_id: campaignId, csv});
+    if (r._error || r.error) {
+      status.textContent = '✗ ' + (r.error || JSON.stringify(r.detail));
+      return;
     }
+    status.textContent = `✓ ${r.leads_processed} leads uploaded with icebreakers!`;
+    document.getElementById('csvFile').value = '';
+  } catch(e) {
+    status.textContent = '✗ ' + e.message;
+  }
+}
 
-    function renderClients(clients) {
-      const tbody = document.getElementById('clients-table');
-      const emptyState = document.getElementById('empty-state');
-      const filter = document.getElementById('status-filter').value;
-      const filtered = filter ? clients.filter(c => c.status?.toLowerCase() === filter) : clients;
+function copyId(id) {
+  navigator.clipboard.writeText(id).catch(()=>{});
+}
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-      emptyState.classList.add('hidden');
-
-      const statusBadge = (s) => {
-        const styles = {
-          paid: 'bg-amber-50 text-amber-700 border-amber-200',
-          running: 'bg-blue-50 text-blue-700 border-blue-200',
-          completed: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-          failed: 'bg-red-50 text-red-700 border-red-200',
-        };
-        const style = styles[(s||'').toLowerCase()] || 'bg-slate-50 text-slate-500 border-slate-200';
-        return `<span class="text-[11px] font-semibold border rounded-md px-2 py-0.5 ${style}">${esc(s || 'unknown')}</span>`;
-      };
-
-      const pkgBadge = (p) => {
-        return `<span class="text-[11px] font-semibold bg-navy-50 text-navy-700 border border-navy-200 rounded-md px-2 py-0.5">${esc(p || 'starter')}</span>`;
-      };
-
-      tbody.innerHTML = filtered.map(c => `
-        <tr class="hover:bg-slate-50/50 transition">
-          <td class="px-6 py-4">
-            <div class="font-semibold text-slate-800 text-sm">${esc(c.company_name)}</div>
-            <div class="text-xs text-slate-400 mt-0.5 max-w[200px] truncate">${esc(c.what_they_sell || '')}</div>
-          </td>
-          <td class="px-6 py-4">
-            <div class="text-sm text-slate-700">${esc(c.contact_name)}</div>
-             <div class="text-xs text-slate-400">${esc(c.contact_email)}</div>
-          </td>
-          <td class="px-6 py-4">${pkgBadge(c.package)}</td>
-          <td class="px-6 py-4">${statusBadge(c.status)}</td>
-          <td class="px-6 py-4 text-right font-mono text-xs text-slate-600 font-medium">${(c.leads_researched || 0).toLocaleString()}</td>
-          <td class="px-6 py-4 text-right font-mono text-xs text-slate-600 font-medium">${(c.emails_sent || 0).toLocaleString()}</td>
-          <td class="px-6 py-4 text-right font-mono text-xs text-slate-600 font-medium">${(c.replies_received || 0).toLocaleString()}</td>
-          <td class="px-6 py-4 text-right font-mono text-xs text-slate-600 font-medium">$${(c.cost_tracked || 0).toFixed(2)}</td>
-          <td class="px-6 py-4 text-center">
-            ${(c.status || '').toLowerCase() === 'paid'
-              ? `<button onclick="openApproveModal('${c.id}', '${esc(c.company_name)}')" class="bg-navy-700 hover:bg-navy-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-sm">Approve</button>`
-              : `<span class="text-xs text-slate-300">—</span>`
-            }
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function openApproveModal(id, company) {
-      pendingApproveId = id;
-      document.getElementById('modal-company').textContent = company;
-      document.getElementById('approve-modal').classList.remove('hidden');
-    }
-
-    function closeModal() {
-      document.getElementById('approve-modal').classList.add('hidden');
-      pendingApproveId = null;
-    }
-
-    async function confirmApprove() {
-      if (!pendingApproveId) return;
-      const btn = document.getElementById('modal-confirm-btn');
-      btn.disabled = true;
-      btn.textContent = 'Triggering pipeline...';
-      try {
-        const resp = await fetch(`/api/clients/${pendingApproveId}/approve`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const result = await resp.json();
-        if (result.success || result.client_id) {
-          closeModal();
-          loadDashboard();
-        } else {
-          alert('Failed: ' + (result.error || JSON.stringify(result)));
-        }
-      } catch (err) {
-        alert('Error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Approve & Start';
-      }
-    }
-
-    function esc(s) {
-      const d = document.createElement('div');
-      d.textContent = s || '';
-      return d.innerHTML;
-    }
-
-    document.getElementById('status-filter').addEventListener('change', () => {
-      if (dashboardData) renderClients(dashboardData.clients);
-    });
-
-    loadDashboard();
-    setInterval(loadDashboard, 30000);
-  </script>
+// Load on startup
+loadCampaigns();
+</script>
 </body>
 </html>
