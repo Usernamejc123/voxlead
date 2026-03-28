@@ -26,7 +26,6 @@ def _decode_key(k):
     return k
 
 def _get_key():
-    # Use key as-is — Instantly v2 expects the raw key string (base64) directly
     return INSTANTLY_API_KEY
 
 def _decompress(raw):
@@ -100,7 +99,7 @@ def create_campaign(name: str):
                         "5": True,
                         "6": False
                     },
-                    "timezone": "America/New_York"
+                    "timezone": "UTC"
                 }
             ]
         }
