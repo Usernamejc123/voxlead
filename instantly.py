@@ -98,7 +98,8 @@ def create_campaign(name: str):
                         "4": True,
                         "5": True,
                         "6": False
-                    }
+                    },
+                    "timezone": "America/Chicago"
                 }
             ]
         }
