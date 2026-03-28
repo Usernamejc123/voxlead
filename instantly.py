@@ -7,8 +7,8 @@ import os
 import urllib.error
 import urllib.request
 
-# Primary key (workspace:secret format)
-_KEY_PRIMARY = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2JmOktPSXJhb1lEWlRMSw=="
+# Primary key (workspace:secret format, base64 stored)
+_KEY_PRIMARY  = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2JmOktPSXJhb1lEWlRMSw=="
 # Fallback key
 _KEY_FALLBACK = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2ImOnZWV0pCUlJvYWlDRg=="
 
@@ -17,7 +17,6 @@ BASE = "https://api.instantly.ai/api/v2"
 
 
 def _decode_key(k):
-    """Decode base64-encoded key if needed."""
     try:
         decoded = base64.b64decode(k).decode("utf-8")
         if ":" in decoded or "-" in decoded:
@@ -31,15 +30,13 @@ def _get_key():
     return _decode_key(INSTANTLY_API_KEY)
 
 
+# NOTE: No Accept-Encoding so we always get plain text (avoids gzip decode issues)
 _HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive",
-    "Origin": "https://app.instantly.ai",
-    "Referer": "https://app.instantly.ai/",
 }
 
 
@@ -54,23 +51,19 @@ def _req(method, path, data=None, api_key=None):
     try:
         with urllib.request.urlopen(req, timeout=20) as resp:
             raw = resp.read()
-            enc = resp.headers.get("Content-Encoding", "")
-            if enc == "gzip":
-                import gzip
-                raw = gzip.decompress(raw)
             return json.loads(raw.decode("utf-8"))
     except urllib.error.HTTPError as e:
         raw = e.read().decode("utf-8", errors="replace")
         try:
             return {"_error": True, "status_code": e.code, "detail": json.loads(raw)}
         except Exception:
-            return {"_error": True, "status_code": e.code, "detail": raw[:300]}
+            return {"_error": True, "status_code": e.code, "detail": raw[:500]}
     except Exception as exc:
         return {"_error": True, "status_code": 0, "detail": str(exc)}
 
 
 def _req_with_fallback(method, path, data=None):
-    """Try primary key, fall back to secondary if 401/403."""
+    """Try primary key, auto-fallback to secondary on 401/403."""
     result = _req(method, path, data)
     if result.get("_error") and result.get("status_code") in (401, 403):
         fallback = _decode_key(_KEY_FALLBACK)
