@@ -2,13 +2,14 @@
 Instantly v2 API — simple wrapper using only stdlib.
 """
 import base64
+import gzip
 import json
 import os
 import urllib.error
 import urllib.request
 
 # Primary key (workspace:secret format, base64 stored)
-_KEY_PRIMARY  = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2JmOktPSXJhb1lEWlRMSw=="
+_KEY_PRIMARY  = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2JmOktPSXJhb1lEWlRMKw=="
 # Fallback key
 _KEY_FALLBACK = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2ImOnZWV0pCUlJvYWlDRg=="
 
@@ -30,7 +31,14 @@ def _get_key():
     return _decode_key(INSTANTLY_API_KEY)
 
 
-# NOTE: No Accept-Encoding so we always get plain text (avoids gzip decode issues)
+def _decompress(raw):
+    """Try gzip decompress, return as-is if not compressed."""
+    try:
+        return gzip.decompress(raw)
+    except Exception:
+        return raw
+
+
 _HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json",
@@ -50,14 +58,15 @@ def _req(method, path, data=None, api_key=None):
     req.add_header("Authorization", f"Bearer {key}")
     try:
         with urllib.request.urlopen(req, timeout=20) as resp:
-            raw = resp.read()
+            raw = _decompress(resp.read())
             return json.loads(raw.decode("utf-8"))
     except urllib.error.HTTPError as e:
-        raw = e.read().decode("utf-8", errors="replace")
+        raw = _decompress(e.read())
+        raw_str = raw.decode("utf-8", errors="replace")
         try:
-            return {"_error": True, "status_code": e.code, "detail": json.loads(raw)}
+            return {"_error": True, "status_code": e.code, "detail": json.loads(raw_str)}
         except Exception:
-            return {"_error": True, "status_code": e.code, "detail": raw[:500]}
+            return {"_error": True, "status_code": e.code, "detail": raw_str[:500]}
     except Exception as exc:
         return {"_error": True, "status_code": 0, "detail": str(exc)}
 
