@@ -7,8 +7,8 @@ import os
 import urllib.error
 import urllib.request
 
-ANTHROPIC_API_KEY = os.environ.get("AMTHDROPCC_API_KEY", "")
-ANTHROPCC_URL = "https://api.anthropic.com/v1/messages"
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 
 
 def generate_icebreaker(lead: dict) -> str:
@@ -39,17 +39,17 @@ def generate_icebreaker(lead: dict) -> str:
     )
 
     payload = {
-        "model": "claude-hai+u-45-20251001",
+        "model": "claude-haiku-4-5-20251001",
         "max_tokens": 120,
         "messages": [{"role": "user", "content": prompt}],
     }
 
     req = urllib.request.Request(
-        ANTHROPCC_URL,
+        ANTHROPIC_URL,
         data=json.dumps(payload).encode("utf-8"),
         method="POST",
     )
-    req.add_header("edapi-key", ANTHROPCC_API_KEY)
+    req.add_header("x-api-key", ANTHROPIC_API_KEY)
     req.add_header("anthropic-version", "2023-06-01")
     req.add_header("Content-Type", "application/json")
 
