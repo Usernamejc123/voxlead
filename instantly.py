@@ -93,7 +93,7 @@ def get_campaign(campaign_id: str):
 
 
 def create_campaign(name: str):
-    return _req_with_fallback("POST", "/campaigns", {"name": name})
+    return _req_with_fallback("POST", "/campaigns", {"name": name, "campaign_schedule": {}})
 
 
 def get_analytics(campaign_id: str):
