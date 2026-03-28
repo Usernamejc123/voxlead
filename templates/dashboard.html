@@ -151,6 +151,15 @@ select option{background:#1a1a2e}
 .text-muted{color:var(--muted)}
 .text-xs{font-size:11.5px}
 .font-medium{font-weight:500}
+/* ── Login Overlay ── */
+.login-overlay{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center}
+.login-card{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:38px 40px;width:380px;max-width:calc(100vw - 32px);box-shadow:0 40px 100px rgba(0,0,0,.7);animation:modal-in .25s ease}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.login-logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(99,102,241,.4)}
+.login-logo-text{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.login-title{font-size:15px;font-weight:700;margin-bottom:5px;letter-spacing:-.2px}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5}
+.login-err{font-size:12.5px;color:#f87171;margin-top:12px;display:none;padding:10px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:7px}
 </style>
 </head>
 <body>
@@ -366,21 +375,31 @@ select option{background:#1a1a2e}
   </div>
 </div>
 
-<!-- ═══ TOAST CONTAINER ═══ -->
-<div class="toast-container" id="toastContainer"></div>
-
-<script>
-// ─── State ───────────────────────────────────────────────────────────────────
-let allCampaigns = [];
-let activeFilter = 'all';
-
-const STATUS_MAP  = {0:'Draft', 1:'Active', 2:'Paused', 3:'Completed', 4:'Error'};
-const STATUS_CLS  = {0:'badge-draft', 1:'badge-active', 2:'badge-paused', 3:'badge-completed', 4:'badge-error'};
+<!-- ═══ LOGIN OVERLAY ═══ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">V</div>
+      <div>
+        <div class="login-logo-text">Voxlead</div>
+        <div class="logo-badge">OPERATOR</div>
+      </div>
+    </div>
+    <div class="login-title">Sign in to Dashboard</div>
+    <div class="login-sub">Enter your operator credentials to continue.</div>
+    <div class="form-group" style="margin-bottom:14px">
+      <label class="form-label">Username</label>
+      <input type="text" class="text-input" id="loginUser" placeholder="admin" value="admin" autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" class="text-input" id="loginPass" placeholder="••••••••""WF�6���WFS�&7W'&V�B�77v�&B"��W�F�v��&�b�WfV�B�W����tV�FW"r���v�ₒ"����F�c��F�b�C�&��v��W'""6�73�&��v���W'"#���F�c��'WGF��6�73�&'F�'F��&��'�"��6Ɩ6��&��v�ₒ"�C�&��v��'F�"7G��S�'v�GF��S��&v���F��#���W7F�g��6��FV�C�6V�FW#�FF��s��G�#�6�v�����'WGF�����F�c���F�cࠣ���)Y)Y)YD�5B4��D��U")Y)Y)Y����F�b6�73�'F�7B�6��F��W""�C�'F�7D6��F��W"#���F�cࠣ�67&�C���)H)H)H7FFR)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H)H ��WB��6��v�2��Ӱ��WB7F�fTf��FW"�v��s���WB�WF�F��V���V�ò��&6ScB�W6W#�72�6WB����v�ࠦ6��7B5DEU5�����tG&gBr��t7F�fRr�#�uW6VBr�3�t6���WFVBr�C�tW'&�"wӰ�6��7B5DEU5�4�2���v&FvR�G&gBr��v&FvR�7F�fRr�#�x��Y�K\]\�Y	�ΉؘY�KX��\]Y	�
+��badge-error'};
 
 // ─── Toast ───────────────────────────────────────────────────────────────────
 function toast(msg, type='info') {
   const c = document.getElementById('toastContainer');
-  const icons = {success:'✅', error:'❌', info:'💬'};
+  const icons = {success:'�, error:'⛌', info:'💬'};
   const t = document.createElement('div');
   t.className = 'toast ' + type;
   t.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ️'}</span><span class="toast-msg">${msg}</span>`;
@@ -391,11 +410,60 @@ function toast(msg, type='info') {
   }, 3500);
 }
 
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+function showLogin(msg) {
+  const ov = document.getElementById('loginOverlay');
+  ov.style.display = 'flex';
+  if (msg) {
+    const e = document.getElementById('loginErr');
+    e.textContent = msg; e.style.display = 'block';
+  }
+  setTimeout(() => document.getElementById('loginPass').focus(), 80);
+}
+function hideLogin() {
+  document.getElementById('loginOverlay').style.display = 'none';
+}
+
+as9nc function login() {
+  const u    = document.getElementById('loginUser').value.trim();
+  const p    = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  const btn  = document.getElementById('loginBtn');
+  errEl.style.display = 'none';
+  if (!u || !p) { errEl.textContent = 'Enter username and password.'; errEl.style.display='block'; return; }
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  try {
+    const token = btoa(u + ':' + p);
+    const r = await fetch('/api/campaigns', {headers:{'Authorization':'Basic ' + token}});
+    if (r.status === 401) {
+      errEl.textContent = 'Invalid credentials — check your password.';
+      errEl.style.display = 'block';
+    } else {
+      _authToken = token;
+      hideLogin();
+      const data = await r.json();
+      allCampaigns = data.items || [];
+      updateStats(allCampaigns);
+      renderCampaigns();
+      populateSelector(allCampaigns);
+      checkStatus();
+    }
+  } catch(e) {
+    errEl.textContent = 'Connection error: ' + e.message;
+    errEl.style.display = 'block';
+  } finally {
+    btn.textContent = 'Sign In'; btn.disabled = false;
+  }
+}
+
 // ─── API ─────────────────────────────────────────────────────────────────────
 async function api(method, path, body) {
-  const opts = {method, headers:{'Content-Type':'application/json'}};
+  const headers = {'Content-Type':'application/json'};
+  if (_authToken) headers['Authorization'] = 'Basic ' + _authToken;
+  const opts = {method, headers};
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(path, opts);
+  if (r.status === 401) { showLogin('Session expired — please sign in again.'); throw new Error('401 Unauthorized'); }
   return r.json();
 }
 
@@ -406,7 +474,7 @@ async function checkStatus() {
     const dot = document.getElementById('statusDot');
     const txt = document.getElementById('statusText');
     if (r.ok) {
-      dot.style.cssText = 'background:#10b981;box-shadow:0 0 6px #10b981';
+      dot.style.cssText = 'background:#10b981;box-shadow:0 0 6px#10b981';
       txt.textContent = 'All systems go';
     } else {
       dot.style.cssText = 'background:#f59e0b';
@@ -558,7 +626,7 @@ async function createCampaign() {
   }
 }
 
-// ─── File upload ──────────────────────────────────────────────────────────────
+// ─── File upload ─────────────────────────────────────────────────────────────
 function onFileSelect(input) {
   const f = input.files[0];
   document.getElementById('fileName').textContent = f
@@ -628,7 +696,7 @@ async function uploadLeads() {
   }
 }
 
-// ─── Nav helpers ──────────────────────────────────────────────────────────────
+// ─── Nav helpers ─────────────────────────────────────────────────────────────
 function scrollTop(e){ if(e)e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); }
 function scrollToUpload(e){ if(e)e.preventDefault(); document.getElementById('uploadCard').scrollIntoView({behavior:'smooth'}); }
 function scrollToCampaigns(e){ if(e)e.preventDefault(); document.getElementById('campaignsCard').scrollIntoView({behavior:'smooth'}); }
@@ -649,8 +717,8 @@ document.getElementById('newCampaignModal').addEventListener('click', function(e
 });
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
-checkStatus();
-loadCampaigns();
+// Always show login first — login() will authenticate and load data on success
+showLogin();
 </script>
 </body>
 </html>
