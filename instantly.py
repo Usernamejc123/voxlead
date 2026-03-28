@@ -9,7 +9,7 @@ import urllib.error
 import urllib.request
 
 # Primary key (workspace:secret format, base64 stored)
-_KEY_PRIMARY  = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2JmOktPSXJhb1lEWlRMKw=="
+_KEY_PRIMARY  = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2JmOktPSXJhb1lEWlRMSw=="
 # Fallback key
 _KEY_FALLBACK = "NTY4OWU3OTktM2Y1NC00MDI5LTk0YzktOWZlM2FmOGZmY2ImOnZWV0pCUlJvYWlDRg=="
 
@@ -85,23 +85,23 @@ def _req_with_fallback(method, path, data=None):
 # ── Public helpers ────────────────────────────────────────────────────────────
 
 def list_campaigns(limit=100, skip=0):
-    return _req_with_fallback("GET", f"/campaign?limit={limit}&skip={skip}")
+    return _req_with_fallback("GET", f"/campaigns?limit={limit}&skip={skip}")
 
 
 def get_campaign(campaign_id: str):
-    return _req_with_fallback("GET", f"/campaign/{campaign_id}")
+    return _req_with_fallback("GET", f"/campaigns/{campaign_id}")
 
 
 def create_campaign(name: str):
-    return _req_with_fallback("POST", "/campaign", {"name": name})
+    return _req_with_fallback("POST", "/campaigns", {"name": name})
 
 
 def get_analytics(campaign_id: str):
-    return _req_with_fallback("GET", f"/analytics/campaign/summary?id={campaign_id}&start=2024-01-01&end=2099-01-01")
+    return _req_with_fallback("GET", f"/analytics/campaigns/summary?id={campaign_id}&start=2024-01-01&end=2099-01-01")
 
 
 def upload_leads(campaign_id: str, leads: list):
-    return _req_with_fallback("POST", "/lead/add", {
+    return _req_with_fallback("POST", "/leads", {
         "campaign_id": campaign_id,
         "leads": leads,
         "skip_if_in_workspace": True,
@@ -110,4 +110,4 @@ def upload_leads(campaign_id: str, leads: list):
 
 def set_campaign_status(campaign_id: str, status: int):
     # status: 1 = active, 2 = paused
-    return _req_with_fallback("POST", f"/campaign/{campaign_id}/status", {"status": status})
+    return _req_with_fallback("PATCH", f"/campaigns/{campaign_id}", {"status": status})
