@@ -28,7 +28,8 @@ def _decode_key(k):
 
 
 def _get_key():
-    return _decode_key(INSTANTLY_API_KEY)
+    # Use key as-is — Instantly v2 expects the raw key string (base64) directly
+    return INSTANTLY_API_KEY
 
 
 def _decompress(raw):
@@ -75,8 +76,7 @@ def _req_with_fallback(method, path, data=None):
     """Try primary key, auto-fallback to secondary on 401/403."""
     result = _req(method, path, data)
     if result.get("_error") and result.get("status_code") in (401, 403):
-        fallback = _decode_key(_KEY_FALLBACK)
-        result2 = _req(method, path, data, api_key=fallback)
+        result2 = _req(method, path, data, api_key=_KEY_FALLBACK)
         if not result2.get("_error"):
             return result2
     return result
