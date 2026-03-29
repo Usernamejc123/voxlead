@@ -43,6 +43,7 @@ MAKE_APOLLO_WEBHOOK_URL = os.environ.get(
     "MAKE_APOLLO_WEBHOOK_URL",
     "https://hook.us2.make.com/9ir5aamaf6a2x36ncxsxzvh9ul3nuqjp",
 )
+# Hot-lead reply handler — fires when a prospect replies "interested"
 MAKE_REPLY_WEBHOOK_URL = os.environ.get("MAKE_REPLY_WEBHOOK_URL", "")
 
 # ── Instantly ──────────────────────────────────────────────────────────────────
@@ -58,7 +59,7 @@ DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD", "voxlead2026")
 APP_URL = os.environ.get("APP_URL", "http://localhost:3000")
 PORT = int(os.environ.get("PORT", "3000"))
 
-# ── Pricing plans ─────────────────────────────────────────────────────────────
+# ── Pricing plans (for display and validation) ────────────────────────────────
 PLANS = {
     "starter": {
         "name": "Starter",
@@ -107,7 +108,7 @@ PLANS = {
     },
 }
 
-# ── Airtable field IDs ────────────────────────────────────────────────────────
+# ── Airtable field IDs (for reference) ────────────────────────────────────────
 CLIENTS_FIELDS = {
     "company_name": "fldHmeUr4LpfDwegu",
     "contact_name": "fldwpA0etKpIkb1Qm",
