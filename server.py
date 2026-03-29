@@ -131,7 +131,7 @@ class VoxleadHandler(BaseHTTPRequestHandler):
             # Static files
             if path.startswith("/static/"):
                 safe_path = os.path.normpath(
-                    os.path.join(STATIC_DIR, path[len("/static/"):])
+                    os.path.join(STATIC_DIR, path[len("/static/") :])
                 )
                 if safe_path.startswith(STATIC_DIR):
                     self._send_static(safe_path)
@@ -184,20 +184,6 @@ class VoxleadHandler(BaseHTTPRequestHandler):
             # API: Health check
             if path == "/api/health":
                 self._send_json({"status": "ok", "service": "voxlead"})
-                return
-
-            # API: Instantly campaigns proxy
-            if path.startswith("/api/instantly/campaigns"):
-                if require_auth(self):
-                    return
-                parts = path.split("/")
-                if len(parts) >= 5 and parts[4] == "analytics":
-                    campaign_id = parts[3]
-                    analytics = instantly_handler.get_campaign_analytics(campaign_id)
-                    self._send_json(analytics)
-                else:
-                    campaigns = instantly_handler.list_campaigns()
-                    self._send_json({"campaigns": campaigns})
                 return
 
             self.send_response(404)
@@ -277,6 +263,19 @@ class VoxleadHandler(BaseHTTPRequestHandler):
                 data = self._parse_json_body()
                 result = instantly_handler.handle_reply_received(data)
                 self._send_json(result)
+                return
+
+            # Instantly: Campaign analytics proxy (dashboard use)
+            if path.startswith("/api/instantly/campaigns"):
+                # e.g. /api/instantly/campaigns/<id>/analytics
+                parts = path.split("/")
+                if len(parts) >= 5 and parts[4] == "analytics":
+                    campaign_id = parts[3]
+                    analytics = instantly_handler.get_campaign_analytics(campaign_id)
+                    self._send_json(analytics)
+                else:
+                    campaigns = instantly_handler.list_campaigns()
+                    self._send_json({"campaigns": campaigns})
                 return
 
             self._send_json({"error": "Not found"}, status=404)
