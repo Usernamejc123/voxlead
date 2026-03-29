@@ -23,10 +23,12 @@ from jinja2 import Environment, FileSystemLoader
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=True)
 
+
 def render(name, **ctx):
     return jinja_env.get_template(name).render(config=config, **ctx)
 
-# ── Auth ─────────────────────────────────────────────────────────────────────
+
+# — Auth ————————————————————————————————————————————————————————
 def _check_auth(handler) -> bool:
     auth = handler.headers.get("Authorization", "")
     if not auth.startswith("Basic "):
@@ -38,6 +40,7 @@ def _check_auth(handler) -> bool:
     except Exception:
         return False
 
+
 def _require_auth(handler) -> bool:
     if not _check_auth(handler):
         handler.send_response(401)
@@ -48,7 +51,8 @@ def _require_auth(handler) -> bool:
         return True
     return False
 
-# ── Handler ──────────────────────────────────────────────────────────────────
+
+# — Handler ————————————————————————————————————————————————————————
 class Handler(BaseHTTPRequestHandler):
     def _json(self, data, status=200):
         body = json.dumps(data).encode("utf-8")
@@ -74,7 +78,7 @@ class Handler(BaseHTTPRequestHandler):
     def _json_body(self):
         return json.loads(self._body() or b"{}")
 
-    # ── GET ──────────────────────────────────────────────────────────────
+    # — GET ——————————————————————————————————————————————————————
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/") or "/"
@@ -91,6 +95,15 @@ class Handler(BaseHTTPRequestHandler):
                         _js = _jf.read()
                     _dash = _dash.replace("</body>", "<script>" + _js + "</script></body>", 1)
                 self._html(_dash)
+                return
+            if path == "/signup":
+                plan = parse_qs(parsed.query).get("plan", ["starter"])[0]
+                cancelled = parse_qs(parsed.query).get("cancelled", [""])[0]
+                self._html(render("signup.html", selected_plan=plan, cancelled=cancelled))
+                return
+            if path == "/success":
+                session_id = parse_qs(parsed.query).get("session_id", [""])[0]
+                self._html(render("success.html", session_id=session_id))
                 return
             if path == "/api/health":
                 self._json({"status": "ok"})
@@ -111,7 +124,7 @@ class Handler(BaseHTTPRequestHandler):
             traceback.print_exc()
             self._json({"error": str(e)}, 500)
 
-    # ── POST ─────────────────────────────────────────────────────────────
+    # — POST ——————————————————————————————————————————————————————
     def do_POST(self):
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/") or "/"
@@ -146,51 +159,46 @@ class Handler(BaseHTTPRequestHandler):
                 reader = csv.DictReader(io.StringIO(csv_text))
                 leads = []
                 for row in reader:
-                    row = {k.strip().lower(): v.strip() for k, v in row.items()}
-                    email = (row.get("email") or row.get("email address") or "").strip()
-                    if not email or "@" not in email:
-                        continue
-                    lead = {
-                        "email": email,
-                        "first_name": row.get("first_name") or row.get("first name") or "",
-                        "last_name": row.get("last_name") or row.get("last name") or "",
-                        "company": row.get("company") or row.get("company name") or "",
-                        "title": row.get("title") or row.get("job title") or "",
-                        "industry": row.get("industry") or "",
-                    }
-                    lead["personalization"] = claude_service.generate_icebreaker(lead)
-                    leads.append(lead)
-                if not leads:
-                    self._json({"error": "No valid leads found in CSV"}, 400)
-                    return
+                    icebreaker = claude_service.generate_icebreaker(row)
+                    leads.append({
+                        "email": row.get("email", ""),
+                        "first_name": row.get("first_name", ""),
+                        "last_name": row.get("last_name", ""),
+                        "company_name": row.get("company", ""),
+                        "personalization": icebreaker,
+                        "skip_if_in_workspace": True,
+                    })
                 result = instantly.upload_leads(campaign_id, leads)
-                self._json({"leads_processed": len(leads), "instantly_response": result})
+                self._json({"uploaded": len(leads), "result": result})
+                return
+            if path == "/api/checkout":
+                data = self._json_body()
+                import stripe_handler as sh
+                session = sh.create_checkout_session(
+                    plan=data.get("plan", "starter"),
+                    company_name=data.get("company_name", ""),
+                    contact_name=data.get("contact_name", ""),
+                    contact_email=data.get("contact_email", ""),
+                    what_they_sell=data.get("what_they_sell", ""),
+                    target_location=data.get("target_location", ""),
+                )
+                self._json({"url": session.get("url", ""), "id": session.get("id", "")})
                 return
             self._json({"error": "not found"}, 404)
         except Exception as e:
             traceback.print_exc()
             self._json({"error": str(e)}, 500)
 
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        self.end_headers()
-
     def log_message(self, fmt, *args):
-        print(f"[Voxlead] {self.address_string()} {args[0] if args else ''}")
+        pass
 
-# ── Main ─────────────────────────────────────────────────────────────────────
+
 def run():
-    port = config.PORT
+    port = int(os.environ.get("PORT", getattr(config, "PORT", 8000)))
     server = HTTPServer(("0.0.0.0", port), Handler)
     print(f"[Voxlead] Running on port {port}")
-    print(f"[Voxlead] Dashboard → http://localhost:{port}/dashboard (admin / {config.DASHBOARD_PASSWORD})")
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        server.server_close()
+    server.serve_forever()
+
 
 if __name__ == "__main__":
     run()
