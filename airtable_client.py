@@ -76,6 +76,36 @@ def update_client(record_id: str, fields: dict) -> dict:
     return resp.json()
 
 
+def update_client_status(record_id: str, status: str) -> dict:
+    """Convenience: update just the Status field."""
+    return update_client(record_id, {"Status": status})
+
+
+def update_client_fields(record_id: str, updates: dict) -> dict:
+    """Update named fields. Accepts snake_case keys and maps to Airtable display names."""
+    FIELD_NAME_MAP = {
+        "status": "Status",
+        "leads_researched": "Leads Researched",
+        "emails_sent": "Emails Sent",
+        "replies_received": "Replies Received",
+        "cost_tracked": "Cost Tracked",
+        "notes": "Notes",
+        "n8n_campaign_id": "Make Campaign ID",  # reuse existing field
+    }
+    mapped = {}
+    for k, v in updates.items():
+        field_name = FIELD_NAME_MAP.get(k, k)
+        mapped[field_name] = v
+    return update_client(record_id, mapped)
+
+
+def increment_replies(record_id: str, count: int = 1) -> dict:
+    """Increment the Replies Received counter for a client."""
+    client = get_client(record_id)
+    current = (client.get("fields") or {}).get("Replies Received", 0) or 0
+    return update_client(record_id, {"Replies Received": int(current) + count})
+
+
 # ── Leads ─────────────────────────────────────────────────────────────────────
 
 
@@ -179,8 +209,11 @@ def get_dashboard_stats() -> dict:
         else 0.025
     )
 
+    active_campaigns = status_counts.get("campaign_active", 0) + status_counts.get("approved", 0) + status_counts.get("active", 0)
+
     return {
         "total_clients": total_clients,
+        "active_campaigns": active_campaigns,
         "client_status_counts": status_counts,
         "total_leads_researched": total_leads_researched,
         "total_emails_sent": total_emails_sent,
