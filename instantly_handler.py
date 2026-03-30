@@ -8,8 +8,28 @@ Processes Instantly webhook events:
 For each genuine reply the handler:
   1. Classifies the intent with Claude AI
   2. Updates the matching client record in Airtable (Replies Received++)
-  3. If the lead is "interested", fires a Make.com webhook so the client
-     gets notified and a calendar link is sent back automatically.
+  3. If the lead is "interested", fires the n8n hot-lead reply webhook
+     so the client gets notified and a calendar link is sent back automatically.
+
+Instantly webhook payload (reply_received example):
+{
+  "event_type": "reply_received",
+  "timestamp": "2026-03-29T12:00:00Z",
+  "campaign_id": "abc123",
+  "campaign_name": "Q1 Tech Outreach",
+  "lead": {
+    "email": "john@acme.com",
+    "first_name": "John",
+    "last_name": "Smith",
+    "company_name": "Acme Corp"
+  },
+  "reply": {
+    "subject": "Re: Quick question",
+    "body": "Yes, this sounds interesting. Can we jump on a call?",
+    "from_email": "john@acme.com",
+    "timestamp": "2026-03-29T12:00:00Z"
+  }
+}
 """
 
 import json
@@ -17,12 +37,15 @@ import os
 import requests
 import config
 
+# ── Anthropic / Claude ────────────────────────────────────────────────────────
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
 
+# ── Instantly API v2 ──────────────────────────────────────────────────────────
 INSTANTLY_API_KEY = os.environ.get("INSTANTLY_API_KEY", "")
 INSTANTLY_API_URL = "https://api.instantly.ai/api/v2"
 
+# ── Intent labels ─────────────────────────────────────────────────────────────
 INTENT_INTERESTED = "interested"
 INTENT_NOT_INTERESTED = "not_interested"
 INTENT_OOO = "out_of_office"
@@ -31,7 +54,11 @@ INTENT_UNKNOWN = "unknown"
 
 
 def _classify_reply(reply_body: str, lead_info: dict) -> dict:
-    """Use Claude Haiku to classify the reply intent and draft a follow-up."""
+    """
+    Call Claude Haiku to classify the reply intent and draft a follow-up.
+    Returns: {"intent": str, "summary": str, "suggested_reply": str}
+    Falls back gracefully if Anthropic key is not set.
+    """
     if not ANTHROPIC_API_KEY:
         return {
             "intent": INTENT_UNKNOWN,
@@ -43,14 +70,15 @@ def _classify_reply(reply_body: str, lead_info: dict) -> dict:
     company = lead_info.get("company_name", "your company")
 
     system_prompt = """You are an expert sales reply classifier for a cold email agency.
-Read the prospect's reply and output a JSON object with:
+Your job is to read a prospect's email reply and output a JSON object with:
 - intent: one of "interested", "not_interested", "out_of_office", "more_info_needed"
 - summary: one sentence describing what the prospect said
-- suggested_reply: a natural, brief reply (2-3 sentences max). Empty string if not_interested or out_of_office.
-Output ONLY valid JSON with no extra text."""
+- suggested_reply: a natural, brief reply the sender should send back (2-3 sentences max). Leave empty string if not_interested or out_of_office.
+
+Be concise. Output ONLY valid JSON with no extra text."""
 
     user_prompt = f"""Prospect: {first_name} at {company}
-Reply:
+Reply body:
 ---
 {reply_body[:2000]}
 ---
@@ -74,6 +102,7 @@ Classify this reply."""
         )
         resp.raise_for_status()
         raw = resp.json()["content"][0]["text"].strip()
+        # Strip markdown code fences if present
         if raw.startswith("```"):
             raw = raw.split("```")[1]
             if raw.startswith("json"):
@@ -87,8 +116,12 @@ Classify this reply."""
         }
 
 
-def _find_client_by_campaign(campaign_id: str):
-    """Look up the Airtable client record that matches the given Instantly campaign ID."""
+def _find_client_by_campaign(campaign_id: str) -> dict | None:
+    """
+    Look up the Airtable client record that matches the given Instantly campaign ID.
+    Searches the 'Make Campaign ID' field.
+    Returns the record dict or None.
+    """
     try:
         import airtable_client
         clients = airtable_client.list_clients(max_records=200)
@@ -102,7 +135,10 @@ def _find_client_by_campaign(campaign_id: str):
 
 
 def _increment_airtable_replies(client_record_id: str, notes_append: str = "") -> bool:
-    """Increment Replies Received counter and optionally append a note."""
+    """
+    Increment Replies Received counter in Airtable for the matching client.
+    Optionally append to the Notes field.
+    """
     try:
         import airtable_client
         client = airtable_client.get_client(client_record_id)
@@ -122,11 +158,14 @@ def _increment_airtable_replies(client_record_id: str, notes_append: str = "") -
 
 
 def _notify_hot_lead(campaign_id: str, lead: dict, classification: dict) -> bool:
-    """Fire the Make.com hot-lead webhook when a prospect is classified as interested."""
-    webhook_url = os.environ.get("MAKE_REPLY_WEBHOOK_URL", config.MAKE_CAMPAIGN_WEBHOOK_URL)
-    if not webhook_url:
-        return False
-
+    """
+    Fire the n8n hot-lead webhook when a prospect is classified as interested.
+    n8n handles:
+      - Sending the prospect a calendar booking link
+      - Notifying the operator via Slack/email
+      - Logging the hot lead in Airtable
+    """
+    import n8n_handler
     payload = {
         "event": "hot_lead",
         "campaign_id": campaign_id,
@@ -137,12 +176,8 @@ def _notify_hot_lead(campaign_id: str, lead: dict, classification: dict) -> bool
         "summary": classification.get("summary", ""),
         "suggested_reply": classification.get("suggested_reply", ""),
     }
-
-    try:
-        resp = requests.post(webhook_url, json=payload, timeout=15)
-        return resp.status_code in (200, 201, 202)
-    except Exception:
-        return False
+    result = n8n_handler.trigger_hot_lead_reply(payload)
+    return result.get("success", False)
 
 
 def handle_reply_received(event: dict) -> dict:
@@ -151,9 +186,11 @@ def handle_reply_received(event: dict) -> dict:
 
     Flow:
       1. Extract lead + reply data from event payload
-      2. Classify intent with Claude AI
-      3. Update Airtable reply counter
-      4. If interested → fire hot-lead Make.com webhook
+      2. Skip auto-replies (OOO) early unless they need special handling
+      3. Classify intent with Claude AI
+      4. Update Airtable reply counter
+      5. If interested → fire hot-lead Make.com webhook
+      6. Return result summary
     """
     event_type = event.get("event_type", "reply_received")
     campaign_id = event.get("campaign_id", "")
@@ -173,14 +210,17 @@ def handle_reply_received(event: dict) -> dict:
         "hot_lead_notified": False,
     }
 
+    # Auto-replies (OOO) — classify but don't fire hot-lead webhook
     is_auto = event_type == "auto_reply_received"
 
+    # Classify intent
     classification = _classify_reply(reply_body, lead)
     intent = classification.get("intent", INTENT_UNKNOWN)
     result["intent"] = intent
     result["summary"] = classification.get("summary", "")
     result["suggested_reply"] = classification.get("suggested_reply", "")
 
+    # Find matching Airtable client record
     client_rec = _find_client_by_campaign(campaign_id)
 
     if client_rec:
@@ -191,6 +231,7 @@ def handle_reply_received(event: dict) -> dict:
         result["airtable_updated"] = updated
         result["client_record_id"] = client_rec["id"]
 
+    # Fire hot-lead webhook for genuinely interested replies
     if intent == INTENT_INTERESTED and not is_auto:
         notified = _notify_hot_lead(campaign_id, lead, classification)
         result["hot_lead_notified"] = notified
@@ -199,7 +240,10 @@ def handle_reply_received(event: dict) -> dict:
 
 
 def get_campaign_analytics(campaign_id: str) -> dict:
-    """Fetch live analytics for an Instantly campaign via API v2."""
+    """
+    Fetch live analytics for an Instantly campaign via API v2.
+    Returns opens, clicks, replies, leads contacted.
+    """
     if not INSTANTLY_API_KEY:
         return {"error": "INSTANTLY_API_KEY not configured"}
 
@@ -219,7 +263,9 @@ def get_campaign_analytics(campaign_id: str) -> dict:
 
 
 def list_campaigns() -> list:
-    """List all Instantly campaigns via API v2."""
+    """
+    List all Instantly campaigns via API v2.
+    """
     if not INSTANTLY_API_KEY:
         return []
 
