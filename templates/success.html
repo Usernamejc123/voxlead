@@ -3,64 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Successful - Voxlead</title>
+  <title>You're In — Voxlead</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0f0f0f;
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .success-container {
-      text-align: center;
-      padding: 3rem;
-      max-width: 500px;
-    }
-    .checkmark {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #6c63ff, #a85cff);
+    body { background: #080d1a; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(15,23,42,0.8); border: 1px solid rgba(59,130,246,0.15); }
+    .check-circle {
+      width: 5rem; height: 5rem;
+      background: rgba(22,163,74,0.15);
+      border: 2px solid rgba(22,163,74,0.4);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 2rem;
-      font-size: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: popIn 0.5s ease-out;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #6c63ff, #a85cff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    p { color: #aaa; line-height: 1.6; margin-bottom: 2rem; }
-    .btn {
-      display: inline-block;
-      padding: 1rem 2rem;
-      background: linear-gradient(135deg, #6c63ff, #a85cff);
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: 600;
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      80% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div class="success-container">
-    <div class="checkmark">✓</div>
-    <h1>You're In!</h1>
-    <p>
-      Thank you for joining Voxlead. Your request has been received and our team will reach out within 24 hours to get your campaign set up.
-    </p>
-    {% if session_id %}
-    <p style="color:#666;font-size:0.8rem">Order ID: {{ session_id }}</p>
-    {% endif %}
-    <a href="/" class="btn">Back to Home</a>
+<nav class="border-b border-slate-800/60 px-6 py-4">
+  <a href="/" class="text-xl font-bold text-white">Vox<span class="text-blue-500">lead</span></a>
+</nav>
+
+<div class="max-w-xl mx-auto px-6 py-20 text-center">
+  <div class="check-circle">
+    <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+    </svg>
   </div>
+
+  <h1 class="text-4xl font-black text-white mb-4">You're all set!</h1>
+  <p class="text-slate-400 text-lg mb-10">
+    Your onboarding is confirmed. We'll review your campaign details and have everything live within <strong class="text-white">48 hours</strong>.
+  </p>
+
+  <div class="glass rounded-2xl p-8 text-left mb-8 space-y-4">
+    <h2 class="text-white font-bold mb-5">What happens next:</h2>
+    <div class="flex gap-4">
+      <div class="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-600/30 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">1</div>
+      <div>
+        <p class="text-white font-semibold text-sm">Campaign strategy review</p>
+        <p class="text-slate-500 text-xs mt-0.5">We review your ICP, offer, and target market and build your outreach strategy.</p>
+      </div>
+    </div>
+    <div class="flex gap-4">
+      <div class="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-600/30 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">2</div>
+      <div>
+        <p class="text-white font-semibold text-sm">Lead sourcing & validation</p>
+        <p class="text-slate-500 text-xs mt-0.5">We build your verified lead list from Apollo.io and validate every email via NeverBounce.</p>
+      </div>
+    </div>
+    <div class="flex gap-4">
+      <div class="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-600/30 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">3</div>
+      <div>
+        <p class="text-white font-semibold text-sm">AI copy generation</p>
+        <p class="text-slate-500 text-xs mt-0.5">Claude AI generates unique, personalized emails for every prospect on your list.</p>
+      </div>
+    </div>
+    <div class="flex gap-4">
+      <div class="w-8 h-8 rounded-full bg-green-600/20 border border-green-600/30 flex items-center justify-center text-green-400 font-bold text-sm shrink-0">4</div>
+      <div>
+        <p class="text-white font-semibold text-sm">Campaign goes live</p>
+        <p class="text-slate-500 text-xs mt-0.5">Emails start sending. The AI reply agent handles responses 24/7. Meetings get booked.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-slate-500 text-sm mb-6">
+    You'll receive a confirmation email shortly. If you have any questions, reply to that email and we'll get back to you fast.
+  </p>
+
+  <a href="/" class="inline-block border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white font-semibold px-6 py-3 rounded-xl transition-all text-sm">
+    &#8592; Back to homepage
+  </a>
+</div>
 </body>
 </html>
