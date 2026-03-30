@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voxlead — Cold Email Outreach That Books Meetings</title>
+  <title>Voxlead — Done-For-You Cold Email Outreach That Books Meetings</title>
+  <meta name="description" content="We build and run your entire cold email system. Verified leads, AI-personalized emails, automated follow-ups — you just show up to the calls.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -13,455 +14,476 @@
         fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
         extend: {
           colors: {
-            navy:   { 50:'#f0f4ff', 100:'#dbe4ff', 200:'#bac8ff', 300:'#91a7ff', 400:'#748ffc', 500:'#5c7cfa', 600:'#4c6ef5', 700:'#4263eb', 800:'#3b5bdb', 900:'#364fc7', 950:'#1e3a8a' },
-            slate:  { 50:'#f8fafc', 100:'#f1f5f9', 200:'#e2e8f0', 300:'#cbd5e1', 400:'#94a3b8', 500:'#64748b', 600:'#475569', 700:'#334155', 800:'#1e293b', 900:'#0f172a' },
-            accent: { 500:'#0ea5e9', 600:'#0284c7' }
+            brand: { 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8', 800:'#1e40af', 900:'#1e3a8a' },
+            dark:  { 800:'#0f1729', 900:'#080d1a' }
           }
         }
       }
     }
   </script>
   <style>
+    :root { --brand: #3b82f6; }
     html { scroll-behavior: smooth; }
-    .hero-gradient { background: linear-gradient(165deg, #0f172a 0%, #1e3a5f 40%, #1e3a8a 100%); }
-    .trust-bar { background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%); }
-    .feature-card { transition: transform 0.2s, box-shadow 0.2s; }
-    .feature-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(30,58,138,0.08); }
+    body { background: #080d1a; color: #f1f5f9; }
+    .hero-bg {
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.3) 0%, transparent 70%),
+                  linear-gradient(180deg, #0c1524 0%, #080d1a 100%);
+    }
+    .glass {
+      background: rgba(15,23,42,0.7);
+      border: 1px solid rgba(59,130,246,0.15);
+      backdrop-filter: blur(12px);
+    }
+    .glow-border { border: 1px solid rgba(59,130,246,0.4); box-shadow: 0 0 30px rgba(59,130,246,0.1); }
+    .plan-popular {
+      background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(30,64,175,0.2));
+      border: 1px solid rgba(59,130,246,0.5);
+      box-shadow: 0 0 40px rgba(59,130,246,0.15);
+    }
     .plan-card { transition: transform 0.2s, box-shadow 0.2s; }
     .plan-card:hover { transform: translateY(-4px); }
-    .plan-popular { box-shadow: 0 8px 40px rgba(30,58,138,0.12); }
-    details summary::-webkit-details-marker { display: none; }
-    details summary { list-style: none; }
+    .step-line::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      width: 2px;
+      height: 3rem;
+      background: linear-gradient(180deg, rgba(59,130,246,0.5), transparent);
+      transform: translateX(-50%);
+    }
+    .badge { background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; }
+    .stat-card { background: rgba(15,23,42,0.8); border: 1px solid rgba(59,130,246,0.1); }
+    .faq-item summary { cursor: pointer; list-style: none; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item[open] summary .faq-icon { transform: rotate(45deg); }
+    .faq-icon { transition: transform 0.2s; }
+    .nav-cta { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+    .nav-cta:hover { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, #3b82f6, #2563eb); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,99,235,0.4); }
+    .check-item::before { content: '✓'; color: #3b82f6; font-weight: 700; margin-right: 0.5rem; }
   </style>
 </head>
-<body class="bg-white text-slate-900 antialiased">
+<body class="font-sans antialiased">
 
-  <!-- ─── Nav ─────────────────────────────────────────────────────────── -->
-  <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
-    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-navy-700 rounded-lg flex items-center justify-center">
-          <span class="text-white font-bold text-sm">V</span>
-        </div>
-        <span class="text-lg font-bold text-slate-900 tracking-tight">Voxlead</span>
+<!-- ─── NAV ──────────────────────────────────────────────────────────────── -->
+<nav class="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/60 bg-dark-900/80 backdrop-blur-xl">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+    <a href="/" class="text-xl font-bold text-white tracking-tight">Vox<span class="text-brand-500">lead</span></a>
+    <div class="hidden md:flex items-center gap-8 text-sm text-slate-400">
+      <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
+      <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+      <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/signup" class="nav-cta text-white text-sm font-semibold px-4 py-2 rounded-lg">Get Started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────────────────────────── -->
+<section class="hero-bg pt-32 pb-24 px-6">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 badge px-4 py-1.5 rounded-full text-sm font-medium mb-8">
+      <span class="w-2 h-2 bg-brand-400 rounded-full animate-pulse"></span>
+      AI-Powered Cold Email — Done For You
+    </div>
+    <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-6">
+      We Fill Your Calendar<br>
+      <span class="text-brand-400">With Qualified Calls</span>
+    </h1>
+    <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+      We build your entire cold email outreach engine — verified leads, AI-personalized messages, automated follow-ups, and reply handling. You just show up to the meetings.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/signup" class="btn-primary text-white font-bold text-lg px-8 py-4 rounded-xl inline-block">
+        Start Getting Meetings →
       </a>
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500">
-        <a href="#how-it-works" class="hover:text-slate-900 transition">How It Works</a>
-        <a href="#pricing" class="hover:text-slate-900 transition">Pricing</a>
-        <a href="#faq" class="hover:text-slate-900 transition">FAQ</a>
-      </div>
-      <a href="/signup" class="bg-navy-700 hover:bg-navy-800 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition shadow-sm">
-        Start Getting Meetings
+      <a href="#how-it-works" class="text-slate-400 hover:text-white font-medium text-lg px-8 py-4 rounded-xl border border-slate-700 hover:border-slate-500 transition-all inline-block">
+        See How It Works
       </a>
     </div>
-  </nav>
+    <!-- Social proof row -->
+    <div class="mt-14 flex flex-wrap justify-center gap-8 text-sm text-slate-500">
+      <div class="flex items-center gap-2"><span class="text-green-400">●</span> No contracts</div>
+      <div class="flex items-center gap-2"><span class="text-green-400">●</span> Setup in 48 hours</div>
+      <div class="flex items-center gap-2"><span class="text-green-400">●</span> Dedicated campaign manager</div>
+      <div class="flex items-center gap-2"><span class="text-green-400">●</span> Cancel anytime</div>
+    </div>
+  </div>
+</section>
 
-  <!-- ─── Hero ────────────────────────────────────────────────────────── -->
-  <section class="hero-gradient pt-32 pb-24 px-6">
-    <div class="max-w-4xl mx-auto text-center">
-      <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 mb-8">
-        <span class="w-2 h-2 bg-emerald-400 rounded-full"></span>
-        <span class="text-white/80 text-sm font-medium">Done-for-you cold email outreach</span>
+<!-- ─── STATS ─────────────────────────────────────────────────────────────── -->
+<section class="py-16 px-6 border-y border-slate-800/50">
+  <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div class="stat-card rounded-xl p-6">
+      <div class="text-4xl font-black text-brand-400 mb-2">98%</div>
+      <div class="text-sm text-slate-400">Email deliverability rate</div>
+    </div>
+    <div class="stat-card rounded-xl p-6">
+      <div class="text-4xl font-black text-brand-400 mb-2">5k+</div>
+      <div class="text-sm text-slate-400">Campaigns launched</div>
+    </div>
+    <div class="stat-card rounded-xl p-6">
+      <div class="text-4xl font-black text-brand-400 mb-2">48h</div>
+      <div class="text-sm text-slate-400">Average launch time</div>
+    </div>
+    <div class="stat-card rounded-xl p-6">
+      <div class="text-4xl font-black text-brand-400 mb-2">3–8%</div>
+      <div class="text-sm text-slate-400">Average reply rate</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ──────────────────────────────────────────────────────── -->
+<section id="how-it-works" class="py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="badge inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4">THE PROCESS</div>
+      <h2 class="text-4xl md:text-5xl font-black text-white mb-4">From Zero to Booked Calls</h2>
+      <p class="text-lg text-slate-400 max-w-xl mx-auto">Everything is handled for you. You give us your target market and offer — we do the rest.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Step 1 -->
+      <div class="glass rounded-2xl p-8 relative">
+        <div class="flex items-start gap-5">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/20 border border-brand-600/30 flex items-center justify-center text-brand-400 font-black text-lg shrink-0">1</div>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Onboarding & Strategy</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Fill out our intake form with your offer, ICP, and target market. We build your campaign strategy and ideal customer profile. Live in 48 hours.</p>
+          </div>
+        </div>
       </div>
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
-        We book qualified sales calls<br>using cold email — done for you
-      </h1>
-      <p class="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-4 leading-relaxed">
-        No ads. No hiring. No guesswork.<br class="hidden md:block">
-        We handle prospecting, personalization, and outreach — you just take the meetings.
-      </p>
-      <p class="text-sm text-slate-400 mt-4 mb-10">
-        No ads &bull; No hiring &bull; No complicated tools
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-        <a href="#pricing" class="bg-white text-navy-800 font-semibold px-8 py-3.5 rounded-lg text-base hover:bg-slate-50 transition shadow-lg shadow-navy-950/20">
-          See Plans &amp; Results
+      <!-- Step 2 -->
+      <div class="glass rounded-2xl p-8 relative">
+        <div class="flex items-start gap-5">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/20 border border-brand-600/30 flex items-center justify-center text-brand-400 font-black text-lg shrink-0">2</div>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Lead Research & Validation</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">We source verified contacts from Apollo.io and validate every email with NeverBounce before they ever hit your queue — no bounces, no spam flags.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div class="glass rounded-2xl p-8 relative">
+        <div class="flex items-start gap-5">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/20 border border-brand-600/30 flex items-center justify-center text-brand-400 font-black text-lg shrink-0">3</div>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">AI-Personalized Outreach</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Every email is uniquely personalized using Claude AI and Instantly's email engine — custom icebreakers, relevant pain points, high-converting CTAs. Not templates. Real copy.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Step 4 -->
+      <div class="glass rounded-2xl p-8 relative">
+        <div class="flex items-start gap-5">
+          <div class="w-12 h-12 rounded-xl bg-brand-600/20 border border-brand-600/30 flex items-center justify-center text-brand-400 font-black text-lg shrink-0">4</div>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Automated Follow-Ups & Reply Handling</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Our AI Sales Agent monitors every inbox, handles replies automatically, books meetings on your behalf, and flags hot leads for immediate follow-up. 24/7.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow diagram -->
+    <div class="mt-12 glass rounded-2xl p-8">
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-6 text-center">Full Automation Stack</p>
+      <div class="flex flex-wrap justify-center items-center gap-3 text-sm">
+        <div class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-slate-300">Apollo.io<br><span class="text-xs text-slate-500">Lead sourcing</span></div>
+        <span class="text-brand-500 font-bold">→</span>
+        <div class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-slate-300">NeverBounce<br><span class="text-xs text-slate-500">Email validation</span></div>
+        <span class="text-brand-500 font-bold">→</span>
+        <div class="bg-brand-900/40 border border-brand-700/50 rounded-lg px-4 py-2 text-brand-300">Claude AI<br><span class="text-xs text-brand-400/70">Personalization</span></div>
+        <span class="text-brand-500 font-bold">→</span>
+        <div class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-slate-300">Instantly.ai<br><span class="text-xs text-slate-500">Sending + AI replies</span></div>
+        <span class="text-brand-500 font-bold">→</span>
+        <div class="bg-green-900/30 border border-green-700/40 rounded-lg px-4 py-2 text-green-300">Booked Meeting<br><span class="text-xs text-green-400/70">You show up</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHY VOXLEAD ───────────────────────────────────────────────────────── -->
+<section class="py-20 px-6 bg-slate-900/40">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-4xl font-black text-white mb-4">Why Voxlead vs Doing It Yourself</h2>
+      <p class="text-slate-400 max-w-xl mx-auto">Most teams try to build cold email in-house. It takes months, costs more, and underperforms. Here's the honest comparison.</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-red-900/10 border border-red-800/30 rounded-2xl p-8">
+        <h3 class="text-red-400 font-bold text-lg mb-6">❌ DIY Cold Email</h3>
+        <ul class="space-y-3 text-slate-400 text-sm">
+          <li class="flex gap-3"><span class="text-red-400">✗</span> 2-4 weeks to set up tools and workflows</li>
+          <li class="flex gap-3"><span class="text-red-400">✗</span> $500-$1,000/mo in tool costs alone</li>
+          <li class="flex gap-3"><span class="text-red-400">✗</span> Hiring or spending 10+ hours/week managing it</li>
+          <li class="flex gap-3"><span class="text-red-400">✗</span> Generic templates that get ignored</li>
+          <li class="flex gap-3"><span class="text-red-400">✗</span> No system for handling replies</li>
+          <li class="flex gap-3"><span class="text-red-400">✗</span> High bounce rates tank your domain reputation</li>
+          <li class="flex gap-3"><span class="text-red-400">✗</span> You don't know what's working</li>
+        </ul>
+      </div>
+      <div class="bg-green-900/10 border border-green-700/30 rounded-2xl p-8">
+        <h3 class="text-green-400 font-bold text-lg mb-6">✅ Voxlead</h3>
+        <ul class="space-y-3 text-slate-400 text-sm">
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Live in 48 hours — zero setup on your end</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> All tools included in your plan price</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Fully managed — you focus on closing</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> AI writes unique copy for every single prospect</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> AI reply agent books meetings automatically</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> 98% deliverability via NeverBounce validation</li>
+          <li class="flex gap-3"><span class="text-green-400">✓</span> Weekly performance reports + real-time dashboard</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRICING ───────────────────────────────────────────────────────────── -->
+<section id="pricing" class="py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="badge inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4">PRICING</div>
+      <h2 class="text-4xl md:text-5xl font-black text-white mb-4">Simple, Transparent Pricing</h2>
+      <p class="text-slate-400 max-w-lg mx-auto">All plans include complete setup, campaign management, and our AI sales agent. No hidden fees.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 items-start">
+
+      <!-- Starter -->
+      <div class="plan-card glass rounded-2xl p-8">
+        <div class="mb-6">
+          <p class="text-slate-400 text-sm font-medium mb-1">Starter</p>
+          <div class="flex items-end gap-1">
+            <span class="text-4xl font-black text-white">$497</span>
+            <span class="text-slate-500 mb-1">/mo</span>
+          </div>
+          <p class="text-slate-500 text-sm mt-2">500 verified leads/month</p>
+        </div>
+        <ul class="space-y-3 text-sm text-slate-300 mb-8">
+          <li class="check-item">500 verified, validated leads</li>
+          <li class="check-item">AI-personalized email copy</li>
+          <li class="check-item">AI reply agent (24/7)</li>
+          <li class="check-item">1 target industry / ICP</li>
+          <li class="check-item">Email deliverability setup</li>
+          <li class="check-item">Monthly campaign report</li>
+        </ul>
+        <a href="/signup?plan=starter" class="block text-center border border-brand-600 text-brand-400 hover:bg-brand-600 hover:text-white font-semibold py-3 rounded-xl transition-all">
+          Get Started
         </a>
-        <a href="#how-it-works" class="border border-white/20 text-white font-medium px-8 py-3.5 rounded-lg text-base hover:bg-white/5 transition">
-          See How It Works
+      </div>
+
+      <!-- Growth (Popular) -->
+      <div class="plan-card plan-popular rounded-2xl p-8 relative">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white text-xs font-bold px-4 py-1.5 rounded-full">MOST POPULAR</div>
+        <div class="mb-6">
+          <p class="text-brand-400 text-sm font-medium mb-1">Growth</p>
+          <div class="flex items-end gap-1">
+            <span class="text-4xl font-black text-white">$997</span>
+            <span class="text-slate-500 mb-1">/mo</span>
+          </div>
+          <p class="text-slate-500 text-sm mt-2">2,000 verified leads/month</p>
+        </div>
+        <ul class="space-y-3 text-sm text-slate-300 mb-8">
+          <li class="check-item">2,000 verified, validated leads</li>
+          <li class="check-item">AI-personalized email copy</li>
+          <li class="check-item">AI reply agent (24/7)</li>
+          <li class="check-item">Up to 3 target industries</li>
+          <li class="check-item">A/B subject line testing</li>
+          <li class="check-item">Weekly performance reports</li>
+          <li class="check-item">Dedicated campaign manager</li>
+        </ul>
+        <a href="/signup?plan=growth" class="block text-center btn-primary text-white font-semibold py-3 rounded-xl">
+          Get Started
         </a>
       </div>
 
-      <!-- Proof Box -->
-      <div class="mt-4 bg-white/5 border border-white/10 rounded-xl p-6 max-w-xl mx-auto text-left">
-        <p class="text-white text-sm">
-          <strong>Example replies:</strong><br><br>
-          "Hey — this actually sounds interesting. Can you send more info?"<br><br>
-          "We've been looking for something like this. Let's set up a call."
-        </p>
+      <!-- Elite -->
+      <div class="plan-card glass rounded-2xl p-8">
+        <div class="mb-6">
+          <p class="text-slate-400 text-sm font-medium mb-1">Elite</p>
+          <div class="flex items-end gap-1">
+            <span class="text-4xl font-black text-white">$1,997</span>
+            <span class="text-slate-500 mb-1">/mo</span>
+          </div>
+          <p class="text-slate-500 text-sm mt-2">5,000 verified leads/month</p>
+        </div>
+        <ul class="space-y-3 text-sm text-slate-300 mb-8">
+          <li class="check-item">5,000 verified, validated leads</li>
+          <li class="check-item">AI-personalized email copy</li>
+          <li class="check-item">AI reply agent (24/7)</li>
+          <li class="check-item">Unlimited industries / ICPs</li>
+          <li class="check-item">Multi-step sequences</li>
+          <li class="check-item">Real-time client dashboard</li>
+          <li class="check-item">Priority support</li>
+          <li class="check-item">Custom sender domains</li>
+        </ul>
+        <a href="/signup?plan=elite" class="block text-center border border-brand-600 text-brand-400 hover:bg-brand-600 hover:text-white font-semibold py-3 rounded-xl transition-all">
+          Get Started
+        </a>
       </div>
-    </div>
-  </section>
 
-  <!-- ─── Trust Bar ───────────────────────────────────────────────────── -->
-  <section class="trust-bar border-b border-slate-200 py-10 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    </div>
+
+    <!-- Money-back note -->
+    <p class="text-center text-slate-500 text-sm mt-8">
+      🔒 Secure checkout &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; No long-term contracts required
+    </p>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ──────────────────────────────────────────────────────── -->
+<section class="py-20 px-6 bg-slate-900/30">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-black text-white mb-3">What Clients Are Saying</h2>
+      <p class="text-slate-500 text-sm">Real results from real campaigns</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="glass rounded-2xl p-6">
+        <div class="flex gap-1 mb-4 text-yellow-400">★★★★★</div>
+        <p class="text-slate-300 text-sm leading-relaxed mb-5">"Booked 8 discovery calls in the first month. The AI personalization is unlike anything I've seen — prospects actually respond because it doesn't feel like a template."</p>
         <div>
-          <div class="text-3xl font-extrabold text-navy-800">50,000+</div>
-          <div class="text-sm text-slate-500 mt-1 font-medium">Emails delivered</div>
+          <p class="text-white font-semibold text-sm">Marcus T.</p>
+          <p class="text-slate-500 text-xs">SaaS Founder, B2B Payments</p>
         </div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="flex gap-1 mb-4 text-yellow-400">★★★★★</div>
+        <p class="text-slate-300 text-sm leading-relaxed mb-5">"We were spending $3k/mo on an SDR who generated fewer meetings. Switched to Voxlead's Growth plan and cut costs while tripling our outbound volume."</p>
         <div>
-          <div class="text-3xl font-extrabold text-navy-800">38%</div>
-          <div class="text-sm text-slate-500 mt-1 font-medium">Avg. open rate</div>
+          <p class="text-white font-semibold text-sm">Priya K.</p>
+          <p class="text-slate-500 text-xs">Agency Owner, Marketing Services</p>
         </div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="flex gap-1 mb-4 text-yellow-400">★★★★★</div>
+        <p class="text-slate-300 text-sm leading-relaxed mb-5">"Setup was done in 2 days. The AI reply agent is scary good — it pre-qualifies leads and books them directly to Calendly. I just show up to calls now."</p>
         <div>
-          <div class="text-3xl font-extrabold text-navy-800">4.2%</div>
-          <div class="text-sm text-slate-500 mt-1 font-medium">Reply rate</div>
-        </div>
-        <div>
-          <div class="text-3xl font-extrabold text-navy-800">97%</div>
-          <div class="text-sm text-slate-500 mt-1 font-medium">Deliverability</div>
+          <p class="text-white font-semibold text-sm">Derek W.</p>
+          <p class="text-slate-500 text-xs">Consultant, HR Tech</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── Who This Is For ──────────────────────────────────────────────── -->
-  <section class="py-16 px-6 bg-white">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-2xl font-bold text-slate-900 mb-6">
-        Who this is for
-      </h2>
-      <div class="grid md:grid-cols-2 gap-6 text-left text-slate-600">
-        <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 text-sm font-medium">
-          <span class="text-emerald-500 text-base">&#10004;</span> Agencies looking for more clients
-        </div>
-        <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 text-sm font-medium">
-          <span class="text-emerald-500 text-base">&#10004;</span> SaaS founders who need demos booked
-        </div>
-        <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 text-sm font-medium">
-          <span class="text-emerald-500 text-base">&#10004;</span> Local service businesses
-        </div>
-        <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 text-sm font-medium">
-          <span class="text-emerald-500 text-base">&#10004;</span> B2B companies selling high-ticket services
-        </div>
-      </div>
+<!-- ─── FAQ ───────────────────────────────────────────────────────────────── -->
+<section id="faq" class="py-24 px-6">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-4xl font-black text-white mb-4">Frequently Asked Questions</h2>
     </div>
-  </section>
+    <div class="space-y-3">
 
-  <!-- ─── How It Works ────────────────────────────────────────────────── -->
-  <section id="how-it-works" class="py-24 px-6 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-5xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="text-sm font-semibold text-navy-600 tracking-wide uppercase mb-3">Process</p>
-        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">How Voxlead works</h2>
-        <p class="text-slate-500 max-w-xl mx-auto text-lg">
-          From signup to booked meetings in four straightforward steps.
-        </p>
-      </div>
-      <div class="grid md:grid-cols-4 gap-6">
-        <div class="feature-card bg-white rounded-2xl p-6 border border-slate-100">
-          <div class="w-10 h-10 bg-navy-700 rounded-xl flex items-center justify-center mb-4">
-            <span class="text-white font-bold text-sm">1</span>
-          </div>
-          <h3 class="font-bold text-base mb-2 text-slate-900">Define your ICP</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Describe your business, who you sell to, and the markets you want to reach.</p>
+      <details class="faq-item glass rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-5 text-white font-semibold">
+          How quickly can you get a campaign live?
+          <span class="faq-icon text-brand-400 text-2xl font-light ml-4">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+          After you complete onboarding, we typically have your campaign live within 48 hours. This includes domain setup, email warmup staging, lead list sourcing, and AI copy generation. You'll get a confirmation email when everything is ready.
         </div>
-        <div class="feature-card bg-white rounded-2xl p-6 border border-slate-100">
-          <div class="w-10 h-10 bg-navy-700 rounded-xl flex items-center justify-center mb-4">
-            <span class="text-white font-bold text-sm">2</span>
-          </div>
-          <h3 class="font-bold text-base mb-2 text-slate-900">We source prospects</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Our systems find and verify decision-makers matching your exact criteria.</p>
-        </div>
-        <div class="feature-card bg-white rounded-2xl p-6 border border-slate-100">
-          <div class="w-10 h-10 bg-navy-700 rounded-xl flex items-center justify-center mb-4">
-            <span class="text-white font-bold text-sm">3</span>
-          </div>
-          <h3 class="font-bold text-base mb-2 text-slate-900">AI writes emails</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Each message gets a personalized opening line based on the prospect's profile.</p>
-        </div>
-        <div class="feature-card bg-white rounded-2xl p-6 border border-slate-100">
-          <div class="w-10 h-10 bg-navy-700 rounded-xl flex items-center justify-center mb-4">
-            <span class="text-white font-bold text-sm">4</span>
-          </div>
-          <h3 class="font-bold text-base mb-2 text-slate-900">Replies hit your inbox</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Emails send from warmed domains. Interested prospects reply directly to you.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      </details>
 
-  <!-- ─── Why Voxlead ─────────────────────────────────────────────────── -->
-  <section class="py-24 px-6 bg-white border-t border-slate-100">
-    <div class="max-w-5xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="text-sm font-semibold text-navy-600 tracking-wide uppercase mb-3">Why Us</p>
-        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Built for results, not busywork</h2>
-      </div>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-slate-50 rounded-2xl p-7 border border-slate-100 shadow-sm">
-          <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3 class="font-bold text-base mb-2">Verified leads only</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Every email is validated before sending — no bounces, no wasted outreach, no damage to sender reputation.</p>
+      <details class="faq-item glass rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-5 text-white font-semibold">
+          What tools do you use? Do I need my own subscriptions?
+          <span class="faq-icon text-brand-400 text-2xl font-light ml-4">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+          Everything is included in your plan price. We use Apollo.io for lead sourcing, NeverBounce for email validation, Instantly.ai for sending and AI reply handling, and Claude AI for personalized copy. You don't need any separate subscriptions.
         </div>
-        <div class="bg-slate-50 rounded-2xl p-7 border border-slate-100 shadow-sm">
-          <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
-          </div>
-          <h3 class="font-bold text-base mb-2">AI personalization</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Each email opens with a unique icebreaker drawn from the prospect's LinkedIn profile and company context.</p>
-        </div>
-        <div class="bg-slate-50 rounded-2xl p-7 border border-slate-100 shadow-sm">
-          <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
-          </div>
-          <h3 class="font-bold text-base mb-2">Infrastructure included</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Pre-warmed sending domains, deliverability monitoring, and reputation management are all handled for you.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      </details>
 
-  <!-- ─── Pricing ─────────────────────────────────────────────────────── -->
-  <section id="pricing" class="py-24 px-6 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-5xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="text-sm font-semibold text-navy-600 tracking-wide uppercase mb-3">Pricing</p>
-        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">One payment. Full campaign.</h2>
-        <p class="text-slate-500 max-w-xl mx-auto text-lg">
-          No monthly subscriptions. No hidden fees. Pay once, get results.
-        </p>
-      </div>
-      <div class="grid md:grid-cols-3 gap-6 items-start">
-
-        <!-- Starter -->
-        <div class="plan-card bg-white border border-slate-200 rounded-2xl p-8">
-          <div class="mb-6">
-            <h3 class="text-base font-semibold text-slate-500 mb-1">Starter</h3>
-            <div class="flex items-baseline gap-1">
-              <span class="text-4xl font-extrabold text-slate-900">$497</span>
-              <span class="text-slate-400 text-sm font-medium">/campaign</span>
-            </div>
-          </div>
-          <ul class="space-y-3 text-sm text-slate-600 mb-8">
-            <li class="text-sm text-emerald-600 font-medium flex items-center gap-2">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Expected: 5–15 replies
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              500 verified leads
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              AI-personalized emails
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              1 target industry
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Deliverability setup
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Campaign report
-            </li>
-          </ul>
-          <a href="/signup?plan=starter" class="block w-full text-center border-2 border-slate-200 hover:border-navy-200 hover:bg-navy-50 text-slate-700 font-semibold py-3 rounded-xl transition">
-            Start Getting Meetings
-          </a>
+      <details class="faq-item glass rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-5 text-white font-semibold">
+          How does the AI reply agent work?
+          <span class="faq-icon text-brand-400 text-2xl font-light ml-4">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+          When a prospect replies, our AI classifies their intent (interested, needs more info, out of office, etc.) and responds appropriately in real-time. For hot leads who say they're interested, it immediately sends a calendar link and notifies you. All of this happens 24/7 without you lifting a finger.
         </div>
+      </details>
 
-        <!-- Growth (Popular) -->
-        <div class="plan-card plan-popular bg-white border-2 border-navy-600 rounded-2xl p-8 relative">
-          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span class="bg-navy-700 text-white text-xs font-bold px-4 py-1.5 rounded-full tracking-wide uppercase">Most Popular</span>
-          </div>
-          <div class="mb-6">
-            <h3 class="text-base font-semibold text-navy-600 mb-1">Growth</h3>
-            <div class="flex items-baseline gap-1">
-              <span class="text-4xl font-extrabold text-slate-900">$997</span>
-              <span class="text-slate-400 text-sm font-medium">/campaign</span>
-            </div>
-          </div>
-          <ul class="space-y-3 text-sm text-slate-600 mb-8">
-            <li class="text-sm text-emerald-600 font-medium flex items-center gap-2">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Expected: 20–60 replies
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              <strong class="text-slate-800">2,000</strong>&nbsp;verified leads
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              AI-personalized emails
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Up to 3 industries
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              A/B subject line testing
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Weekly performance reports
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Dedicated campaign manager
-            </li>
-          </ul>
-          <a href="/signup?plan=growth" class="block w-full text-center bg-navy-700 hover:bg-navy-800 text-white font-semibold py-3 rounded-xl transition shadow-md shadow-navy-700/20">
-            Start Getting Meetings
-          </a>
+      <details class="faq-item glass rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-5 text-white font-semibold">
+          Will cold emails hurt my domain reputation?
+          <span class="faq-icon text-brand-400 text-2xl font-light ml-4">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+          No — that's why we use NeverBounce to validate every email before sending. We also use dedicated sending domains (not your main domain), proper warmup protocols, and send at safe volumes. Our deliverability rate averages 98%.
         </div>
+      </details>
 
-        <!-- Scale -->
-        <div class="plan-card bg-white border border-slate-200 rounded-2xl p-8">
-          <div class="mb-6">
-            <h3 class="text-base font-semibold text-slate-500 mb-1">Scale</h3>
-            <div class="flex items-baseline gap-1">
-              <span class="text-4xl font-extrabold text-slate-900">$1,997</span>
-              <span class="text-slate-400 text-sm font-medium">/campaign</span>
-            </div>
-          </div>
-          <ul class="space-y-3 text-sm text-slate-600 mb-8">
-            <li class="text-sm text-emerald-600 font-medium flex items-center gap-2">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Expected: 50–150+ replies
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              <strong class="text-slate-800">5,000</strong>&nbsp;verified leads
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              AI-personalized emails
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Unlimited industries
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Multi-step sequences
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Real-time dashboard
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Priority support
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              Custom sender domains
-            </li>
-          </ul>
-          <a href="/signup?plan=scale" class="block w-full text-center border-2 border-slate-200 hover:border-navy-200 hover:bg-navy-50 text-slate-700 font-semibold py-3 rounded-xl transition">
-            Start Getting Meetings
-          </a>
+      <details class="faq-item glass rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-5 text-white font-semibold">
+          Can I see how my campaign is performing?
+          <span class="faq-icon text-brand-400 text-2xl font-light ml-4">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+          Yes. All plans include campaign reporting. Growth and Elite plans include a real-time dashboard where you can see emails sent, open rates, reply rates, and booked meetings. Elite clients also get a dedicated client status page.
         </div>
-      </div>
+      </details>
 
-      <!-- Guarantee -->
-      <div class="text-center mt-12">
-        <p class="text-slate-600 text-sm">
-          We don't stop until your campaign is generating replies.<br>
-          If performance is low, we continue optimizing at no extra cost.
-        </p>
-      </div>
+      <details class="faq-item glass rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-5 text-white font-semibold">
+          What if I want to cancel?
+          <span class="faq-icon text-brand-400 text-2xl font-light ml-4">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+          No long-term contracts. You can cancel anytime before your next billing date. We'll wrap up any active campaigns and hand off all your data — lead lists, email copy, campaign reports — so you keep everything.
+        </div>
+      </details>
+
+      <details class="faq-item glass rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-5 text-white font-semibold">
+          Do you work with any industry?
+          <span class="faq-icon text-brand-400 text-2xl font-light ml-4">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+          We work with B2B businesses across most industries — SaaS, agencies, consulting, professional services, logistics, recruiting, and more. Cold email works best when you have a clear offer and a defined target market. We'll tell you during onboarding if your business isn't the right fit.
+        </div>
+      </details>
 
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── FAQ ─────────────────────────────────────────────────────────── -->
-  <section id="faq" class="py-24 px-6 bg-white border-t border-slate-100">
-    <div class="max-w-2xl mx-auto">
-      <div class="text-center mb-14">
-        <p class="text-sm font-semibold text-navy-600 tracking-wide uppercase mb-3">FAQ</p>
-        <h2 class="text-3xl font-extrabold text-slate-900">Common questions</h2>
-      </div>
-      <div class="space-y-4">
-        <details class="group bg-white border border-slate-200 rounded-xl shadow-sm" open>
-          <summary class="cursor-pointer px-6 py-5 font-semibold text-slate-800 text-sm flex justify-between items-center">
-            How long until I start seeing replies?
-            <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
-          </summary>
-          <div class="px-6 pb-5 text-sm text-slate-500 leading-relaxed">Most campaigns generate replies within 5-7 business days after approval. We need 2-3 days for prospect research and email warmup, then outreach begins.</div>
-        </details>
-        <details class="group bg-white border border-slate-200 rounded-xl shadow-sm">
-          <summary class="cursor-pointer px-6 py-5 font-semibold text-slate-800 text-sm flex justify-between items-center">
-            Will this hurt my domain reputation?
-            <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
-          </summary>
-          <div class="px-6 pb-5 text-sm text-slate-500 leading-relaxed">No. We use separate warmed sending domains and accounts — your primary domain is never touched. All emails are sent through pre-warmed infrastructure with 97%+ deliverability.</div>
-        </details>
-        <details class="group bg-white border border-slate-200 rounded-xl shadow-sm">
-          <summary class="cursor-pointer px-6 py-5 font-semibold text-slate-800 text-sm flex justify-between items-center">
-            What information do you need from me?
-            <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
-          </summary>
-          <div class="px-6 pb-5 text-sm text-slate-500 leading-relaxed">Just your business name, what you sell, and your target market (industry, location, company size). We handle everything else — prospect research, email writing, and sending.</div>
-        </details>
-        <details class="group bg-white border border-slate-200 rounded-xl shadow-sm">
-          <summary class="cursor-pointer px-6 py-5 font-semibold text-slate-800 text-sm flex justify-between items-center">
-            Can I review emails before they go out?
-            <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
-          </summary>
-          <div class="px-6 pb-5 text-sm text-slate-500 leading-relaxed">Yes. On Growth and Scale plans, we share sample emails for your approval before launching the full campaign. Starter plans use our proven templates optimized for your industry.</div>
-        </details>
-        <details class="group bg-white border border-slate-200 rounded-xl shadow-sm">
-          <summary class="cursor-pointer px-6 py-5 font-semibold text-slate-800 text-sm flex justify-between items-center">
-            What's included in the campaign report?
-            <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
-          </summary>
-          <div class="px-6 pb-5 text-sm text-slate-500 leading-relaxed">Every campaign includes a full report: emails sent, open rate, reply rate, bounces, and a list of interested prospects. Growth and Scale plans get weekly progress reports throughout the campaign.</div>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── CTA ─────────────────────────────────────────────────────────── -->
-  <section class="py-20 px-6 bg-navy-900">
-    <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">Ready to fill your pipeline?</h2>
-      <p class="text-navy-200 text-lg mb-8">Pick a plan, tell us your ICP, and we'll get to work.</p>
-      <a href="#pricing" class="bg-white text-navy-800 font-semibold px-8 py-3.5 rounded-xl text-base hover:bg-slate-100 transition inline-block shadow-lg">
-        Start Getting Meetings
+<!-- ─── CTA BANNER ────────────────────────────────────────────────────────── -->
+<section class="py-20 px-6">
+  <div class="max-w-3xl mx-auto text-center">
+    <div class="glass glow-border rounded-3xl p-12">
+      <h2 class="text-4xl font-black text-white mb-4">Ready to Fill Your Calendar?</h2>
+      <p class="text-slate-400 mb-8 text-lg">Get started today. Your campaign can be live within 48 hours.</p>
+      <a href="/signup" class="btn-primary text-white font-bold text-lg px-10 py-4 rounded-xl inline-block">
+        Start Getting Meetings →
       </a>
-      <p class="text-navy-300 text-sm mt-4">
-        We only onboard a limited number of clients each month.
-      </p>
+      <p class="text-slate-600 text-sm mt-5">Setup takes 5 minutes. No tech skills required.</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── Testimonial ──────────────────────────────────────────────────── -->
-  <section class="py-16 px-6 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-xl mx-auto text-center">
-      <p class="text-slate-600 italic text-lg leading-relaxed">
-        "We started getting replies within the first week. Super smooth process."
-      </p>
-      <p class="text-sm text-slate-400 mt-3 font-medium">— Early user</p>
+<!-- ─── FOOTER ────────────────────────────────────────────────────────────── -->
+<footer class="border-t border-slate-800 py-10 px-6">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <div>
+      <a href="/" class="text-xl font-bold text-white">Vox<span class="text-brand-500">lead</span></a>
+      <p class="text-slate-600 text-sm mt-1">Done-for-you cold email outreach</p>
     </div>
-  </section>
-
-  <!-- ─── Footer ──────────────────────────────────────────────────────── -->
-  <footer class="py-10 px-6 border-t border-slate-100 bg-white">
-    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 bg-navy-700 rounded-md flex items-center justify-center">
-          <span class="text-white font-bold text-xs">V</span>
-        </div>
-        <span class="text-sm text-slate-500">&copy; 2026 Voxlead. All rights reserved.</span>
-      </div>
-      <div class="flex gap-6 text-sm text-slate-400 font-medium">
-        <a href="mailto:hello@voxlead.com" class="hover:text-slate-700 transition">Contact</a>
-        <a href="#" class="hover:text-slate-700 transition">Privacy</a>
-        <a href="#" class="hover:text-slate-700 transition">Terms</a>
-      </div>
+    <div class="flex gap-6 text-sm text-slate-500">
+      <a href="#how-it-works" class="hover:text-slate-300 transition-colors">How It Works</a>
+      <a href="#pricing" class="hover:text-slate-300 transition-colors">Pricing</a>
+      <a href="#faq" class="hover:text-slate-300 transition-colors">FAQ</a>
+      <a href="/signup" class="hover:text-slate-300 transition-colors">Get Started</a>
     </div>
-  </footer>
+  </div>
+</footer>
 
-</body>
-</html>
+</body></html>
