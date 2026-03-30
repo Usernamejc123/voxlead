@@ -3,190 +3,267 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voxlead — Start Your Campaign</title>
+  <title>Get Started — Voxlead</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-        extend: {
-          colors: {
-            navy:  { 50:'#f0f4ff', 100:'#dbe4ff', 200:'#bac8ff', 600:'#4c6ef5', 700:'#4263eb', 800:'#3b5bdb', 900:'#364fc7', 950:'#1e3a8a' },
-            slate: { 50:'#f8fafc', 100:'#f1f5f9', 200:'#e2e8f0', 300:'#cbd5e1', 400:'#94a3b8', 500:'#64748b', 600:'#475569', 700:'#334155', 800:'#1e293b', 900:'#0f172a' }
-          }
-        }
-      }
+  <style>
+    body { background: #080d1a; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(15,23,42,0.8); border: 1px solid rgba(59,130,246,0.15); }
+    .input-field {
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(71,85,105,0.6);
+      color: #f1f5f9;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-  </script>
+    .input-field:focus {
+      outline: none;
+      border-color: rgba(59,130,246,0.6);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    }
+    .input-field::placeholder { color: #475569; }
+    .plan-option input:checked + .plan-box {
+      border-color: rgba(59,130,246,0.7);
+      background: rgba(59,130,246,0.1);
+    }
+    .plan-box { border: 2px solid rgba(71,85,105,0.4); background: rgba(15,23,42,0.6); transition: all 0.2s; cursor: pointer; }
+    .plan-box:hover { border-color: rgba(59,130,246,0.4); }
+    .btn-submit { background: linear-gradient(135deg, #2563eb, #1d4ed8); transition: all 0.2s; }
+    .btn-submit:hover { background: linear-gradient(135deg, #3b82f6, #2563eb); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,99,235,0.4); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    label { display: block; font-size: 0.875rem; font-weight: 500; color: #cbd5e1; margin-bottom: 0.4rem; }
+    .required-star { color: #f87171; }
+    select.input-field option { background: #0f1729; }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
+<body>
 
-  <!-- Nav -->
-  <nav class="bg-white border-b border-slate-100">
-    <div class="max-w-4xl mx-auto px-6 h-16 flex items-center gap-3">
-      <a href="/" class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-navy-700 rounded-lg flex items-center justify-center">
-          <span class="text-white font-bold text-sm">V</span>
-        </div>
-        <span class="text-lg font-bold text-slate-900 tracking-tight">Voxlead</span>
-      </a>
-      <span class="text-slate-300 ml-2">/</span>
-      <span class="text-sm text-slate-400 font-medium">Start Campaign</span>
-    </div>
-  </nav>
+<nav class="border-b border-slate-800/60 bg-slate-900/80 backdrop-blur-xl px-6 py-4 flex items-center justify-between">
+  <a href="/" class="text-xl font-bold text-white">Vox<span class="text-blue-500">lead</span></a>
+  <a href="/" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">&#8592; Back to site</a>
+</nav>
 
-  <div class="max-w-xl mx-auto px-6 py-12">
+<div class="max-w-2xl mx-auto px-6 py-12">
 
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-black text-white mb-3">Start Your Campaign</h1>
+    <p class="text-slate-400">Fill out the form below. Your campaign will be live within 48 hours.</p>
     {% if cancelled %}
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex items-start gap-3">
-      <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-      <div>
-        <p class="text-sm font-medium text-amber-800">Payment was cancelled</p>
-        <p class="text-sm text-amber-600 mt-0.5">No charge was made. You can try again below.</p>
-      </div>
+    <div class="mt-4 bg-yellow-900/30 border border-yellow-700/40 rounded-xl px-4 py-3 text-yellow-300 text-sm">
+      Your payment was cancelled. No charge was made. You can try again below.
     </div>
     {% endif %}
-
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-2xl font-extrabold text-slate-900 mb-2">Start your campaign</h1>
-      <p class="text-slate-500">Tell us about your business and we'll handle the rest. Takes under 2 minutes.</p>
-    </div>
-
-    <!-- Plan selector -->
-    <div class="mb-8">
-      <label class="block text-sm font-semibold text-slate-700 mb-3">Select your plan</label>
-      <div class="grid grid-cols-3 gap-3" id="plan-selector">
-        <button type="button" data-plan="starter" class="plan-btn group border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200 bg-white">
-          <div class="text-xs font-semibold text-slate-400 group-hover:text-navy-500 uppercase tracking-wide">Starter</div>
-          <div class="text-2xl font-extrabold text-slate-900 mt-1">$497</div>
-          <div class="text-xs text-slate-400 mt-1">500 leads</div>
-        </button>
-        <button type="button" data-plan="growth" class="plan-btn group border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200 bg-white relative">
-          <div class="absolute -top-2.5 left-1/2 -translate-x-1/2">
-            <span class="bg-navy-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Popular</span>
-          </div>
-          <div class="text-xs font-semibold text-slate-400 group-hover:text-navy-500 uppercase tracking-wide">Growth</div>
-          <div class="text-2xl font-extrabold text-slate-900 mt-1">$997</div>
-          <div class="text-xs text-slate-400 mt-1">2,000 leads</div>
-        </button>
-        <button type="button" data-plan="scale" class="plan-btn group border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200 bg-white">
-          <div class="text-xs font-semibold text-slate-400 group-hover:text-navy-500 uppercase tracking-wide">Scale</div>
-          <div class="text-2xl font-extrabold text-slate-900 mt-1">$1,997</div>
-          <div class="text-xs text-slate-400 mt-1">5,000 leads</div>
-        </button>
-      </div>
-    </div>
-
-    <!-- Divider -->
-    <div class="border-t border-slate-200 mb-8"></div>
-
-    <!-- Form -->
-    <form id="signup-form" class="space-y-5">
-      <input type="hidden" name="plan" id="plan-input" value="{{ selected_plan }}">
-
-      <div class="grid md:grid-cols-2 gap-5">
-        <div>
-          <label for="company_name" class="block text-sm font-semibold text-slate-700 mb-1.5">Business name</label>
-          <input type="text" id="company_name" name="company_name" required
-            class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
-            placeholder="Acme Corp">
-        </div>
-        <div>
-          <label for="contact_name" class="block text-sm font-semibold text-slate-700 mb-1.5">Your name</label>
-          <input type="text" id="contact_name" name="contact_name" required
-            class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
-            placeholder="Jane Smith">
-        </div>
-      </div>
-
-      <div>
-        <label for="contact_email" class="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
-        <input type="email" id="contact_email" name="contact_email" required
-          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
-          placeholder="jane@acmecorp.com">
-      </div>
-
-      <div>
-        <label for="what_they_sell" class="block text-sm font-semibold text-slate-700 mb-1.5">What does your business sell?</label>
-        <textarea id="what_they_sell" name="what_they_sell" rows="3" required
-          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition resize-none text-sm"
-          placeholder="We sell SaaS marketing automation tools to mid-market B2B companies..."></textarea>
-      </div>
-
-      <div>
-        <label for="target_location" class="block text-sm font-semibold text-slate-700 mb-1.5">Target industry &amp; location</label>
-        <input type="text" id="target_location" name="target_location" required
-          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-100 outline-none transition text-sm"
-          placeholder="SaaS companies, 50-500 employees, United States">
-      </div>
-
-      <button type="submit" id="submit-btn"
-        class="w-full bg-navy-700 hover:bg-navy-800 text-white font-semibold py-3.5 rounded-xl text-base transition shadow-md shadow-navy-700/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2">
-        Continue to Payment
-      </button>
-
-      <!-- Trust signals -->
-      <div class="flex items-center justify-center gap-6 pt-2">
-        <div class="flex items-center gap-1.5 text-xs text-slate-400">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
-          Secured by Stripe
-        </div>
-        <div class="flex items-center gap-1.5 text-xs text-slate-400">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-          SSL encrypted
-        </div>
-      </div>
-    </form>
   </div>
 
-  <script>
-    const planBtns = document.querySelectorAll('.plan-btn');
-    const planInput = document.getElementById('plan-input');
+  <!-- Plan selector -->
+  <div class="mb-8">
+    <p class="text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wide">Select Your Plan</p>
+    <div class="grid grid-cols-3 gap-3">
+      <label class="plan-option">
+        <input type="radio" name="plan_display" value="starter" class="sr-only" {% if selected_plan == 'starter' or not selected_plan %}checked{% endif %}>
+        <div class="plan-box rounded-xl p-4 text-center">
+          <p class="text-white font-bold text-lg">$497</p>
+          <p class="text-slate-500 text-xs">Starter</p>
+          <p class="text-slate-400 text-xs mt-1">500 leads/mo</p>
+        </div>
+      </label>
+      <label class="plan-option">
+        <input type="radio" name="plan_display" value="growth" class="sr-only" {% if selected_plan == 'growth' %}checked{% endif %}>
+        <div class="plan-box rounded-xl p-4 text-center relative">
+          <div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Popular</div>
+          <p class="text-white font-bold text-lg">$997</p>
+          <p class="text-slate-500 text-xs">Growth</p>
+          <p class="text-slate-400 text-xs mt-1">2,000 leads/mo</p>
+        </div>
+      </label>
+      <label class="plan-option">
+        <input type="radio" name="plan_display" value="elite" class="sr-only" {% if selected_plan == 'elite' %}checked{% endif %}>
+        <div class="plan-box rounded-xl p-4 text-center">
+          <p class="text-white font-bold text-lg">$1,997</p>
+          <p class="text-slate-500 text-xs">Elite</p>
+          <p class="text-slate-400 text-xs mt-1">5,000 leads/mo</p>
+        </div>
+      </label>
+    </div>
+  </div>
 
-    function selectPlan(plan) {
-      planInput.value = plan;
-      planBtns.forEach(btn => {
-        if (btn.dataset.plan === plan) {
-          btn.classList.add('border-navy-600', 'bg-navy-50', 'shadow-sm');
-          btn.classList.remove('border-slate-200', 'bg-white');
-        } else {
-          btn.classList.remove('border-navy-600', 'bg-navy-50', 'shadow-sm');
-          btn.classList.add('border-slate-200', 'bg-white');
-        }
-      });
-    }
+  <form id="signup-form" class="space-y-5">
+    <input type="hidden" id="selected-plan" name="plan" value="{{ selected_plan or 'starter' }}">
 
-    planBtns.forEach(btn => btn.addEventListener('click', () => selectPlan(btn.dataset.plan)));
-    selectPlan('{{ selected_plan }}' || 'starter');
+    <!-- About You -->
+    <div class="glass rounded-2xl p-6 space-y-5">
+      <h3 class="text-white font-bold border-b border-slate-700/50 pb-3">About You</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label>First Name <span class="required-star">*</span></label>
+          <input type="text" name="first_name" placeholder="John" required class="input-field w-full px-4 py-3 rounded-xl">
+        </div>
+        <div>
+          <label>Last Name <span class="required-star">*</span></label>
+          <input type="text" name="last_name" placeholder="Smith" required class="input-field w-full px-4 py-3 rounded-xl">
+        </div>
+      </div>
+      <div>
+        <label>Work Email <span class="required-star">*</span></label>
+        <input type="email" name="contact_email" placeholder="john@company.com" required class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+      <div>
+        <label>Company Name <span class="required-star">*</span></label>
+        <input type="text" name="company_name" placeholder="Acme Corp" required class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+      <div>
+        <label>Company Website</label>
+        <input type="url" name="website" placeholder="https://yourcompany.com" class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+    </div>
 
-    document.getElementById('signup-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Redirecting to Stripe...';
-      try {
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        const resp = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        const result = await resp.json();
-        if (result.url) {
-          window.location.href = result.url;
-        } else {
-          throw new Error(result.error || 'Failed to create checkout session');
-        }
-      } catch (err) {
-        btn.disabled = false;
-        btn.textContent = 'Continue to Payment';
-        alert('Something went wrong: ' + err.message);
-      }
+    <!-- Your Offer -->
+    <div class="glass rounded-2xl p-6 space-y-5">
+      <h3 class="text-white font-bold border-b border-slate-700/50 pb-3">Your Offer</h3>
+      <div>
+        <label>What do you sell? <span class="required-star">*</span></label>
+        <input type="text" name="what_they_sell" placeholder="e.g. HR software for mid-market companies" required class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+      <div>
+        <label>What problem do you solve? <span class="required-star">*</span></label>
+        <textarea name="problem_solved" rows="3" placeholder="e.g. HR teams waste 20+ hours/week on manual onboarding. We cut that to under 2 hours." required class="input-field w-full px-4 py-3 rounded-xl resize-none"></textarea>
+      </div>
+      <div>
+        <label>What makes you different?</label>
+        <textarea name="unique_value" rows="2" placeholder="e.g. Only tool that integrates with Gusto and runs compliance checks automatically." class="input-field w-full px-4 py-3 rounded-xl resize-none"></textarea>
+      </div>
+      <div>
+        <label>Average deal size</label>
+        <select name="deal_size" class="input-field w-full px-4 py-3 rounded-xl">
+          <option value="">Select a range</option>
+          <option value="&lt;1k">Under $1,000</option>
+          <option value="1k-5k">$1,000 - $5,000</option>
+          <option value="5k-20k">$5,000 - $20,000</option>
+          <option value="20k-50k">$20,000 - $50,000</option>
+          <option value="50k+">$50,000+</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Target Market (ICP) -->
+    <div class="glass rounded-2xl p-6 space-y-5">
+      <h3 class="text-white font-bold border-b border-slate-700/50 pb-3">Your Ideal Customer (ICP)</h3>
+      <div>
+        <label>Target Industry / Niche <span class="required-star">*</span></label>
+        <input type="text" name="target_industry" placeholder="e.g. SaaS companies, Dental practices, Real estate agencies" required class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+      <div>
+        <label>Target Job Titles <span class="required-star">*</span></label>
+        <input type="text" name="target_titles" placeholder="e.g. CEO, VP of Sales, Head of HR, Founder" required class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+      <div>
+        <label>Target Company Size</label>
+        <select name="company_size" class="input-field w-full px-4 py-3 rounded-xl">
+          <option value="">Any size</option>
+          <option value="1-10">1-10 employees</option>
+          <option value="11-50">11-50 employees</option>
+          <option value="51-200">51-200 employees</option>
+          <option value="201-500">201-500 employees</option>
+          <option value="500+">500+ employees</option>
+        </select>
+      </div>
+      <div>
+        <label>Target Location</label>
+        <input type="text" name="target_location" placeholder="e.g. United States, UK, North America" class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+      <div>
+        <label>Any companies or types to exclude?</label>
+        <textarea name="exclusions" rows="2" placeholder="e.g. No Fortune 500s, no current clients..." class="input-field w-full px-4 py-3 rounded-xl resize-none"></textarea>
+      </div>
+    </div>
+
+    <!-- Campaign Preferences -->
+    <div class="glass rounded-2xl p-6 space-y-5">
+      <h3 class="text-white font-bold border-b border-slate-700/50 pb-3">Campaign Preferences</h3>
+      <div>
+        <label>What action should prospects take? <span class="required-star">*</span></label>
+        <select name="cta_type" required class="input-field w-full px-4 py-3 rounded-xl">
+          <option value="">Select CTA type</option>
+          <option value="book_call">Book a 15-min discovery call</option>
+          <option value="reply_interested">Reply if interested</option>
+          <option value="demo_request">Request a demo</option>
+          <option value="free_trial">Start a free trial</option>
+          <option value="custom">Custom (describe below)</option>
+        </select>
+      </div>
+      <div>
+        <label>Calendly / booking link (if you have one)</label>
+        <input type="url" name="calendly_link" placeholder="https://calendly.com/yourname/15min" class="input-field w-full px-4 py-3 rounded-xl">
+      </div>
+      <div>
+        <label>Anything else we should know?</label>
+        <textarea name="additional_notes" rows="3" placeholder="Past campaigns, specific angles, messaging preferences, competitor info..." class="input-field w-full px-4 py-3 rounded-xl resize-none"></textarea>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="pt-2">
+      <button type="submit" id="submit-btn" class="btn-submit w-full text-white font-bold text-lg py-4 rounded-xl">
+        <span id="btn-text">Continue to Payment &#8594;</span>
+        <span id="btn-loading" class="hidden">Processing...</span>
+      </button>
+      <p class="text-center text-slate-600 text-xs mt-3">
+        Secure checkout via Stripe &#183; No charge until you confirm
+      </p>
+    </div>
+  </form>
+
+  <div id="error-msg" class="hidden mt-4 bg-red-900/30 border border-red-700/40 rounded-xl px-4 py-3 text-red-300 text-sm"></div>
+
+</div>
+
+<script>
+document.querySelectorAll('input[name="plan_display"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.getElementById('selected-plan').value = radio.value;
+  });
+});
+
+document.getElementById('signup-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const btnText = document.getElementById('btn-text');
+  const btnLoading = document.getElementById('btn-loading');
+  const errMsg = document.getElementById('error-msg');
+
+  btn.disabled = true;
+  btnText.classList.add('hidden');
+  btnLoading.classList.remove('hidden');
+  errMsg.classList.add('hidden');
+
+  const data = {};
+  new FormData(e.target).forEach((val, key) => { data[key] = val; });
+  data.contact_name = (data.first_name + ' ' + data.last_name).trim();
+
+  try {
+    const resp = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
-  </script>
+    const result = await resp.json();
+
+    if (result.url) {
+      window.location.href = result.url;
+    } else if (result.redirect) {
+      window.location.href = result.redirect;
+    } else {
+      // Stripe not yet configured - go to success page
+      window.location.href = '/success?plan=' + encodeURIComponent(data.plan) + '&name=' + encodeURIComponent(data.first_name);
+    }
+  } catch (err) {
+    errMsg.textContent = err.message || 'Something went wrong. Please try again.';
+    errMsg.classList.remove('hidden');
+    btn.disabled = false;
+    btnText.classList.remove('hidden');
+    btnLoading.classList.add('hidden');
+  }
+});
+</script>
 </body>
 </html>
